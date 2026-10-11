@@ -42,7 +42,11 @@ reportes/allure-report/    Reporte Allure HTML (local, ignorado por git)
 | Checkout paso 1 | campos vacíos con placeholder; llenar formulario conserva valores y avanza; cerrar el error |
 | Checkout paso 2 | productos, cantidades y precios; pago (SauceCard #31337) y envío (Free Pony Express); subtotal, impuesto 8% y total con 1, 3 y 6 productos |
 | Checkout completo | confirmación (encabezado, texto, imagen, Back Home); Back Home vuelve al inventario vacío; **PDF de la compra** |
-| Usuarios | login en < 3 s, imágenes, precios, ordenar por precio, agregar los 6 productos y checkout, con cada usuario del sitio |
+| Usuarios | login en < 3 s, imágenes, precios, ordenar por precio, agregar los 6 productos, checkout, abrir el detalle correcto y quitar del carrito, con cada usuario del sitio |
+| Sesión y seguridad | login con Enter; usuario exacto (mayúsculas/espacios); inyección SQL/XSS; contraseña oculta; cookie de sesión; atrás tras logout; carrito entre sesiones; sin errores de JavaScript; cookie forjada; HTTP de rutas internas |
+| Detalle de producto | nombre, precio, descripción e imagen de los 6 productos; agregar/quitar desde el detalle; reflejo en el inventario; id inexistente |
+| Carrito y checkout (avanzado) | quitar desde el carrito; cantidades y precios; imágenes y descripciones; Reset App State; carrito vacío; orden al volver; datos en blanco, con acentos y con scripts |
+| Responsive | inventario en móvil, tablet y escritorio sin scroll horizontal; compra completa en móvil |
 
 ### Defectos detectados por usuario
 
@@ -54,10 +58,21 @@ defecto desaparece, la prueba falla (XPASS estricto) para que se revise.
 
 | Usuario | Defectos |
 |---|---|
-| problem_user | imágenes repetidas, no ordena, botones "Add to cart" que no funcionan, Last Name no se conserva en el checkout |
+| problem_user | imágenes repetidas, no ordena, botones "Add to cart" y "Remove" que no funcionan, abre el detalle de otro producto, Last Name no se conserva en el checkout |
 | performance_glitch_user | login más lento que el umbral de 3 s (no estricto: depende de la carga) |
-| error_user | no ordena, botones "Add to cart" que no funcionan, checkout no se completa |
+| error_user | no ordena, botones "Add to cart" y "Remove" que no funcionan, checkout no se completa |
 | visual_user | imágenes que no corresponden, precios distintos al catálogo, lista no ordenada |
+
+### Otros defectos del sitio (todos los usuarios)
+
+| Defecto | Escenario |
+|---|---|
+| Una cookie `session-username` forjada da acceso sin contraseña | `test_sesion.py::test_cookie_forjada` |
+| Las rutas internas responden HTTP 404 aunque la página se dibuja | `test_sesion.py::test_rutas_http_200` |
+| Se puede completar una compra de $0.00 con el carrito vacío | `test_carrito_avanzado.py::test_checkout_carrito_vacio` |
+| El checkout acepta nombre, apellido y código postal en blanco | `test_carrito_avanzado.py::test_datos_solo_espacios` |
+| "Reset App State" deja los botones en "Remove" hasta recargar | `test_carrito_avanzado.py::test_reset_restablece_botones` |
+| El orden elegido se pierde al volver del detalle | `test_carrito_avanzado.py::test_orden_persiste` |
 
 ## Uso
 

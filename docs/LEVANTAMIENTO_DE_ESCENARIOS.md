@@ -253,8 +253,13 @@ El levantamiento siguió estas capas, de lo general a lo particular:
 5. **Variantes por usuario**: las mismas funcionalidades con los 6 usuarios del
    sitio, con sus defectos conocidos como `xfail`.
 6. **Framework**: pruebas del propio registro (IDs, historial, PDF).
+7. **Exploración del sitio en vivo**: se navegó saucedemo con Playwright para
+   relevar comportamientos no evidentes (cookies, almacenamiento local, códigos
+   HTTP, validaciones, ids de producto, errores de consola). Cada hallazgo se
+   convirtió en un escenario: los comportamientos correctos como verificaciones
+   y los defectos como `xfail` estricto con su motivo.
 
-Resultado actual (96 escenarios):
+Resultado actual (149 escenarios):
 
 | Módulo | Archivo | Escenarios | IDs |
 |---|---|---:|---|
@@ -269,6 +274,11 @@ Resultado actual (96 escenarios):
 | Checkout paso 2 | `tests/ui/test_flujo_compra.py` | 7 | ESC-0077 a 0083 |
 | Checkout completo | `tests/ui/test_flujo_compra.py` | 5 | ESC-0084 a 0088 |
 | Pantallas | `tests/ui/test_pantallas.py` | 8 | ESC-0089 a 0096 |
+| Carrito / Inventario / Checkout paso 1 (avanzado) | `tests/ui/test_carrito_avanzado.py` | 12 | ESC-0097 a 0108 |
+| Detalle de producto | `tests/ui/test_detalle.py` | 9 | ESC-0109 a 0117 |
+| Responsive | `tests/ui/test_responsive.py` | 4 | ESC-0118 a 0121 |
+| Login / Sesión | `tests/ui/test_sesion.py` | 18 | ESC-0122 a 0139 |
+| Usuarios (detalle y quitar) | `tests/ui/test_usuarios.py` | 10 | ESC-0140 a 0149 |
 
 Los IDs reflejan **el orden en que se fueron levantando**, no el módulo. Por eso
 el escenario del PDF del framework (ESC-0056) quedó entre los de usuarios y los
