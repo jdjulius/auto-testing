@@ -5,6 +5,9 @@ Pruebas automatizadas con **pytest + Playwright** sobre
 funcionalidades funcionan, el proyecto **levanta los escenarios de prueba y los
 guarda de forma incremental en CSV**.
 
+> 📄 Cómo funciona el levantamiento y registro de escenarios, paso a paso:
+> [docs/LEVANTAMIENTO_DE_ESCENARIOS.md](docs/LEVANTAMIENTO_DE_ESCENARIOS.md)
+
 ## Estructura
 
 ```
