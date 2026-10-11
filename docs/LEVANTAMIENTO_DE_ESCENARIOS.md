@@ -201,8 +201,13 @@ Ejemplo de una fila después de tres corridas:
 
 ```csv
 id,nodeid,modulo,funcionalidad,descripcion,resultado_esperado,prioridad,fecha_alta,navegador,ultimo_estado,ultima_ejecucion,ejecuciones,fallos
-ESC-0018,tests/ui/test_login.py::test_login_exitoso[chromium],Login,Inicio de sesión,Iniciar sesión con usuario válido,Redirige a /inventory.html y muestra 'Products',Crítica,2026-10-11T04:21:53,chromium,EXITOSO,2026-10-11T05:38:40,3,0
+ESC-0009,tests/ui/test_checkout.py::test_resumen_montos[chromium],Checkout,Resumen,Calcular subtotal; impuesto (8%) y total,Subtotal 39.98; impuesto 3.20; total 43.18,Alta,2026-10-11T04:21:53,chromium,EXITOSO,2026-10-11T06:56:44,3,0
 ```
+
+**La coma es solo el separador.** Al guardar, las comas dentro de los textos se
+reemplazan por `;`, las comillas dobles por simples y los saltos de línea por
+espacios. Así ningún campo va entre comillas y cada línea tiene siempre 13
+columnas: el archivo se puede abrir o partir por comas con cualquier herramienta.
 
 El archivo se reescribe de forma **atómica**: primero en un temporal y luego se
 reemplaza. Si la corrida se interrumpe, el catálogo no queda a medias.

@@ -53,6 +53,18 @@ COLUMNAS_ESCENARIOS = [f.name for f in fields(Escenario)]
 COLUMNAS_EJECUCIONES = [f.name for f in fields(Ejecucion)]
 
 
+def texto_csv(valor):
+    """Deja el texto listo para un CSV sin comillas: la coma es solo el separador.
+
+    Las comas dentro del texto pasan a ';', las comillas dobles a simples y los
+    saltos de línea a espacios.
+    """
+    if not isinstance(valor, str):
+        return valor
+    valor = valor.replace("\r", " ").replace("\n", " ").replace('"', "'")
+    return valor.replace(", ", "; ").replace(",", ";")
+
+
 def ahora() -> str:
     return datetime.now().isoformat(timespec="seconds")
 
@@ -78,7 +90,9 @@ class RegistroEscenarios:
                 self.escenarios[esc.nodeid] = esc
 
     def guardar(self) -> None:
-        """Reescribe el catálogo de forma atómica (archivo temporal + rename)."""
+        """Reescribe el catálogo de forma atómica (archivo temporal + rename).
+
+        Los textos se guardan sin comas para que la coma sea solo el separador."""
         self.ruta_escenarios.parent.mkdir(parents=True, exist_ok=True)
         fd, tmp = tempfile.mkstemp(
             dir=self.ruta_escenarios.parent, prefix=".escenarios", suffix=".tmp"
@@ -87,7 +101,7 @@ class RegistroEscenarios:
             writer = csv.DictWriter(f, fieldnames=COLUMNAS_ESCENARIOS)
             writer.writeheader()
             for esc in sorted(self.escenarios.values(), key=lambda e: e.id):
-                writer.writerow(asdict(esc))
+                writer.writerow({k: texto_csv(v) for k, v in asdict(esc).items()})
         os.replace(tmp, self.ruta_escenarios)
 
     def agregar_ejecuciones(self, ejecuciones: list[Ejecucion]) -> None:

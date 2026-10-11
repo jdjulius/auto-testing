@@ -143,3 +143,28 @@ def test_reporte_pdf(pytester):
     assert pdf.read_bytes().startswith(b"%PDF")
     ejecuciones = _leer(pytester.path / "reportes" / "ejecuciones.csv")
     assert {"defecto conocido"} <= {e["mensaje"] for e in ejecuciones}
+
+
+@pytest.mark.escenario(
+    modulo="Framework",
+    funcionalidad="Registro CSV",
+    descripcion="El catálogo usa la coma solo como separador",
+    resultado_esperado="Textos con comas y comillas se guardan sin comillas; cada línea tiene el mismo número de columnas",
+    prioridad="Alta",
+)
+def test_csv_sin_comas_en_textos(tmp_path):
+    esc_csv = tmp_path / "e.csv"
+    reg = RegistroEscenarios(esc_csv, tmp_path / "x.csv")
+    reg.registrar(
+        "t::a",
+        descripcion='Subtotal, impuesto y total "con IVA"',
+        resultado_esperado="Subtotal 39.98, impuesto 3.20,total 43.18\nfin",
+    )
+    reg.guardar()
+    lineas = esc_csv.read_text(encoding="utf-8").splitlines()
+    assert '"' not in esc_csv.read_text(encoding="utf-8")
+    columnas = {len(linea.split(",")) for linea in lineas}
+    assert columnas == {len(lineas[0].split(","))}
+    fila = _leer(esc_csv)[0]
+    assert fila["descripcion"] == "Subtotal; impuesto y total 'con IVA'"
+    assert fila["resultado_esperado"] == "Subtotal 39.98; impuesto 3.20;total 43.18 fin"
