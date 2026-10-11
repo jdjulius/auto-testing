@@ -7,6 +7,9 @@ guarda de forma incremental en CSV**.
 
 > 📄 Cómo funciona el levantamiento y registro de escenarios, paso a paso:
 > [docs/LEVANTAMIENTO_DE_ESCENARIOS.md](docs/LEVANTAMIENTO_DE_ESCENARIOS.md)
+>
+> 🌐 Cómo usar este proyecto con otra página web:
+> [docs/ADAPTAR_A_OTRA_WEB.md](docs/ADAPTAR_A_OTRA_WEB.md)
 
 ## Estructura
 
