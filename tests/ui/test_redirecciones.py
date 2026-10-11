@@ -172,15 +172,15 @@ def test_menu_reset(inventario: InventarioPage):
 @pytest.mark.parametrize(
     "red, destino",
     [
-        ("twitter", r"^https://(twitter|x)\.com/saucelabs"),
-        ("facebook", r"^https://www\.facebook\.com/saucelabs"),
-        ("linkedin", r"^https://www\.linkedin\.com/company/sauce-labs"),
+        ("X", r"^https://(twitter|x)\.com/saucelabs"),
+        ("Facebook", r"^https://www\.facebook\.com/saucelabs"),
+        ("LinkedIn", r"^https://www\.linkedin\.com/company/sauce-labs"),
     ],
     ids=["twitter", "facebook", "linkedin"],
 )
 def test_redes_sociales(inventario: InventarioPage, red, destino):
     page = inventario.page
-    enlace = page.get_by_test_id(f"social-{red}")
+    enlace = page.get_by_role("contentinfo").get_by_role("link", name=red, exact=True)
     expect(enlace).to_have_attribute("href", re.compile(destino))
     with page.context.expect_page() as nueva:
         enlace.click()
