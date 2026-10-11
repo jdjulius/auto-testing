@@ -78,11 +78,17 @@ def _documentacion(item: pytest.Item) -> dict:
     if not datos.get("modulo"):
         datos["modulo"] = Path(str(item.path)).stem.removeprefix("test_")
     callspec = getattr(item, "callspec", None)
-    if callspec is not None:
+    variante = callspec.id if callspec is not None else ""
+    navegador = callspec.params.get("browser_name") if callspec is not None else None
+    if navegador:
+        # pytest-playwright agrega el navegador como parámetro; se guarda aparte.
+        datos.setdefault("navegador", navegador)
+        variante = "-".join(p for p in variante.split("-") if p != navegador)
+    if variante:
         # Cada combinación parametrizada es su propio escenario.
-        datos["descripcion"] = f"{datos['descripcion']} [{callspec.id}]"
+        datos["descripcion"] = f"{datos['descripcion']} [{variante}]"
         if datos.get("id"):
-            datos["id"] = f"{datos['id']}[{callspec.id}]"
+            datos["id"] = f"{datos['id']}[{variante}]"
     return datos
 
 

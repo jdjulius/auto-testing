@@ -2,10 +2,24 @@
 
 import csv
 import textwrap
+from pathlib import Path
 
 import pytest
 
 from auto_testing.registro import RegistroEscenarios
+
+
+RAIZ = Path(__file__).resolve().parents[2]
+
+
+@pytest.fixture(autouse=True)
+def _pythonpath(monkeypatch):
+    monkeypatch.setenv("PYTHONPATH", str(RAIZ))
+
+
+def _correr(pytester, *args):
+    """Ejecuta pytest en un subproceso (aislado del plugin de Playwright)."""
+    return pytester.runpytest_subprocess("-p", "no:cacheprovider", "-p", "no:playwright", *args)
 
 
 def _leer(ruta):
@@ -58,8 +72,8 @@ def test_corridas_sucesivas(pytester):
             """
         )
     )
-    pytester.runpytest("-p", "no:cacheprovider").assert_outcomes(passed=1, failed=1)
-    pytester.runpytest("-p", "no:cacheprovider").assert_outcomes(passed=1, failed=1)
+    _correr(pytester).assert_outcomes(passed=1, failed=1)
+    _correr(pytester).assert_outcomes(passed=1, failed=1)
 
     escenarios = _leer(pytester.path / "reportes" / "escenarios.csv")
     assert len(escenarios) == 2
@@ -74,7 +88,7 @@ def test_corridas_sucesivas(pytester):
 
     # Una prueba nueva solo agrega un escenario con el siguiente ID.
     pytester.makepyfile(test_nuevo="def test_nuevo():\n    pass\n")
-    pytester.runpytest("-p", "no:cacheprovider")
+    _correr(pytester)
     escenarios = _leer(pytester.path / "reportes" / "escenarios.csv")
     assert [e["id"] for e in escenarios] == ["ESC-0001", "ESC-0002", "ESC-0003"]
 
@@ -88,7 +102,7 @@ def test_corridas_sucesivas(pytester):
 def test_collect_only(pytester):
     pytester.makeconftest('pytest_plugins = ["auto_testing.plugin"]')
     pytester.makepyfile(test_demo="def test_a():\n    pass\n")
-    pytester.runpytest("--collect-only", "-p", "no:cacheprovider")
+    _correr(pytester, "--collect-only")
     escenarios = _leer(pytester.path / "reportes" / "escenarios.csv")
     assert escenarios[0]["ultimo_estado"] == "NO_EJECUTADO"
     assert not (pytester.path / "reportes" / "ejecuciones.csv").exists()

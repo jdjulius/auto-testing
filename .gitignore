@@ -4,3 +4,4 @@ __pycache__/
 .venv/
 reportes/.escenarios*.tmp
 reportes/ejecuciones.csv
+test-results/
