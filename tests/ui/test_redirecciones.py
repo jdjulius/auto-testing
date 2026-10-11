@@ -48,6 +48,8 @@ def test_detalle_producto(inventario: InventarioPage, enlace):
     page = inventario.page
     page.get_by_test_id(f"item-4-{enlace}-link").click()
     expect(page).to_have_url(url("/inventory-item.html?id=4"))
+    # La URL cambia antes de que se dibuje el detalle: esperar un componente propio.
+    expect(page.get_by_test_id("back-to-products")).to_be_visible()
     expect(page.get_by_test_id("inventory-item-name")).to_have_text("Sauce Labs Backpack")
 
 

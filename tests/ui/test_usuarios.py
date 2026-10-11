@@ -42,6 +42,13 @@ DEFECTOS = {
         "problem_user": "El campo Last Name no conserva lo escrito",
         "error_user": "El checkout no se puede completar",
     },
+    "detalle": {
+        "problem_user": "Al abrir un producto se muestra el detalle de otro",
+    },
+    "quitar": {
+        "problem_user": "El botón 'Remove' no quita el producto del carrito",
+        "error_user": "El botón 'Remove' no quita el producto del carrito",
+    },
 }
 
 
@@ -164,3 +171,35 @@ def test_checkout(page: Page, usuario):
     expect(page).to_have_url(re.compile(r"/checkout-step-two\.html$"))
     checkout.finalizar.click()
     expect(checkout.confirmacion).to_have_text("Thank you for your order!")
+
+
+@pytest.mark.escenario(
+    modulo="Usuarios",
+    funcionalidad="Detalle de producto",
+    descripcion="Abrir el detalle muestra el producto elegido",
+    resultado_esperado="Al pulsar 'Sauce Labs Backpack' se abre su detalle (id=4)",
+    prioridad="Alta",
+)
+@pytest.mark.parametrize("usuario", usuarios_para("detalle"))
+def test_detalle_correcto(page: Page, usuario):
+    iniciar_sesion(page, usuario)
+    page.get_by_test_id("item-4-title-link").click()
+    expect(page.get_by_test_id("back-to-products")).to_be_visible()
+    expect(page.get_by_test_id("inventory-item-name")).to_have_text("Sauce Labs Backpack")
+    expect(page).to_have_url(re.compile(r"/inventory-item\.html\?id=4$"))
+
+
+@pytest.mark.escenario(
+    modulo="Usuarios",
+    funcionalidad="Carrito",
+    descripcion="Quitar un producto del carrito",
+    resultado_esperado="Tras 'Remove' el contador desaparece",
+    prioridad="Alta",
+)
+@pytest.mark.parametrize("usuario", usuarios_para("quitar"))
+def test_quitar_producto(page: Page, usuario):
+    inventario = iniciar_sesion(page, usuario)
+    inventario.agregar("Sauce Labs Backpack")
+    expect(inventario.badge_carrito).to_have_text("1")
+    inventario.quitar("Sauce Labs Backpack")
+    expect(inventario.badge_carrito).to_have_count(0, timeout=3_000)
