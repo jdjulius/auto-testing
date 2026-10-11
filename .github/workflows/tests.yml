@@ -22,4 +22,5 @@ jobs:
           path: |
             reportes/*.csv
             reportes/reporte.pdf
+            reportes/compras/
             test-results/
