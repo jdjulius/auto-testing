@@ -106,3 +106,40 @@ def test_collect_only(pytester):
     escenarios = _leer(pytester.path / "reportes" / "escenarios.csv")
     assert escenarios[0]["ultimo_estado"] == "NO_EJECUTADO"
     assert not (pytester.path / "reportes" / "ejecuciones.csv").exists()
+
+
+@pytest.mark.escenario(
+    modulo="Framework",
+    funcionalidad="Reporte PDF",
+    descripcion="Generar el reporte PDF al terminar la corrida",
+    resultado_esperado="reportes/reporte.pdf existe y es un PDF válido; --sin-pdf no lo genera",
+    prioridad="Alta",
+)
+def test_reporte_pdf(pytester):
+    pytester.makeconftest('pytest_plugins = ["auto_testing.plugin"]')
+    pytester.makepyfile(
+        test_demo=textwrap.dedent(
+            """
+            import pytest
+
+            def test_ok():
+                pass
+
+            def test_falla():
+                assert False, "algo salió mal"
+
+            @pytest.mark.xfail(reason="defecto conocido")
+            def test_defecto():
+                assert False
+            """
+        )
+    )
+    pdf = pytester.path / "reportes" / "reporte.pdf"
+    _correr(pytester, "--sin-pdf")
+    assert not pdf.exists()
+
+    resultado = _correr(pytester)
+    resultado.assert_outcomes(passed=1, failed=1, xfailed=1)
+    assert pdf.read_bytes().startswith(b"%PDF")
+    ejecuciones = _leer(pytester.path / "reportes" / "ejecuciones.csv")
+    assert {"defecto conocido"} <= {e["mensaje"] for e in ejecuciones}

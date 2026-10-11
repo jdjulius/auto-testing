@@ -28,6 +28,7 @@ from auto_testing.registro import Ejecucion, RegistroEscenarios, ahora
 _CLAVE = pytest.StashKey[RegistroEscenarios]()
 _CLAVE_EJECUCIONES = pytest.StashKey[dict]()
 _CLAVE_RUN = pytest.StashKey[str]()
+_CLAVE_PDF = pytest.StashKey[Path]()
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -48,6 +49,17 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default=False,
         help="No escribir los CSV de escenarios/ejecuciones",
     )
+    grupo.addoption(
+        "--reporte-pdf",
+        default=None,
+        help="Ruta del reporte PDF de la corrida (default: reportes/reporte.pdf)",
+    )
+    grupo.addoption(
+        "--sin-pdf",
+        action="store_true",
+        default=False,
+        help="No generar el reporte PDF",
+    )
 
 
 def pytest_configure(config: pytest.Config) -> None:
@@ -67,6 +79,10 @@ def pytest_configure(config: pytest.Config) -> None:
     config.stash[_CLAVE] = RegistroEscenarios(Path(escenarios), Path(ejecuciones))
     config.stash[_CLAVE_EJECUCIONES] = {}
     config.stash[_CLAVE_RUN] = datetime.now().strftime("RUN-%Y%m%d-%H%M%S")
+    if not config.getoption("--sin-pdf"):
+        config.stash[_CLAVE_PDF] = Path(
+            config.getoption("--reporte-pdf") or raiz / "reportes" / "reporte.pdf"
+        )
 
 
 def _documentacion(item: pytest.Item) -> dict:
@@ -140,7 +156,8 @@ def pytest_runtest_makereport(item: pytest.Item, call):
         nodeid=item.nodeid,
         estado=estado,
         duracion_s=round(report.duration, 4),
-        mensaje=_mensaje(report) if estado in ("FALLIDO", "ERROR", "OMITIDO") else "",
+        mensaje=_mensaje(report) if estado in ("FALLIDO", "ERROR", "OMITIDO")
+        else getattr(report, "wasxfail", ""),
     )
 
 
@@ -163,6 +180,14 @@ def pytest_sessionfinish(session: pytest.Session) -> None:
     registro.guardar()
     registro.agregar_ejecuciones(list(ejecuciones.values()))
 
+    ruta_pdf = config.stash.get(_CLAVE_PDF, None)
+    if ruta_pdf is not None and ejecuciones:
+        # Import diferido: reportlab solo hace falta si se genera el PDF.
+        from auto_testing.reporte_pdf import generar_pdf
+
+        aplicacion = getattr(config.option, "base_url", None) or ""
+        generar_pdf(ruta_pdf, registro.escenarios, list(ejecuciones.values()), aplicacion=aplicacion)
+
 
 def pytest_terminal_summary(terminalreporter, config: pytest.Config) -> None:
     registro = config.stash.get(_CLAVE, None)
@@ -176,3 +201,6 @@ def pytest_terminal_summary(terminalreporter, config: pytest.Config) -> None:
     for esc in registro.nuevos:
         terminalreporter.write_line(f"  + {esc.id}  {esc.descripcion}")
     terminalreporter.write_line(f"Historial: {registro.ruta_ejecuciones}")
+    ruta_pdf = config.stash.get(_CLAVE_PDF, None)
+    if ruta_pdf is not None and ruta_pdf.exists() and config.stash[_CLAVE_EJECUCIONES]:
+        terminalreporter.write_line(f"Reporte PDF: {ruta_pdf}")

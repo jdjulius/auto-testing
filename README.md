@@ -9,12 +9,14 @@ guarda de forma incremental en CSV**.
 
 ```
 pages/                     Page Objects (login, inventario, carrito, checkout)
-tests/ui/                  Pruebas de saucedemo
+tests/ui/                  Pruebas de saucedemo (incluye redirecciones)
 tests/framework/           Pruebas del registro de escenarios
 auto_testing/registro.py   Lectura/escritura incremental de los CSV
 auto_testing/plugin.py     Plugin de pytest (marcador @escenario, hooks, opciones)
+auto_testing/reporte_pdf.py  Reporte PDF de la corrida
 reportes/escenarios.csv    Catálogo de escenarios (versionado)
 reportes/ejecuciones.csv   Historial de ejecuciones (local, ignorado por git)
+reportes/reporte.pdf       Reporte PDF de la última corrida (local, ignorado por git)
 ```
 
 ## Escenarios cubiertos
@@ -25,6 +27,7 @@ reportes/ejecuciones.csv   Historial de ejecuciones (local, ignorado por git)
 | Inventario | catálogo de 6 productos con precios; ordenar A-Z, Z-A, precio ascendente/descendente |
 | Carrito | contador del carrito; quitar producto; contenido del carrito; seguir comprando |
 | Checkout | compra completa; subtotal + impuesto 8% + total; campos obligatorios |
+| Redirecciones | páginas protegidas sin sesión → login; detalle de producto (por nombre e imagen) y volver; cancelar checkout paso 1 → carrito y paso 2 → inventario; "Back Home" tras la compra; menú All Items, About y Reset App State; enlaces de Twitter, Facebook y LinkedIn |
 | Usuarios | login en < 3 s, imágenes, precios, ordenar por precio, agregar los 6 productos y checkout, con cada usuario del sitio |
 
 ### Defectos detectados por usuario
@@ -55,10 +58,26 @@ pytest --headed --slowmo 500 # ver el navegador
 pytest --browser firefox     # otro navegador
 pytest --collect-only        # solo levanta escenarios nuevos, sin ejecutarlos
 pytest --sin-registro        # ejecuta sin tocar los CSV
+pytest --sin-pdf             # ejecuta sin generar el PDF
+pytest --reporte-pdf otro.pdf
+
+python -m auto_testing.reporte_pdf   # regenera el PDF de la última corrida desde los CSV
 ```
 
 En GitHub Actions (`.github/workflows/tests.yml`) se ejecuta todo en cada push
 y los CSV, capturas y trazas de fallos se publican como artefacto `reportes`.
+
+## Reporte PDF
+
+Al terminar cada corrida se genera `reportes/reporte.pdf` con:
+
+- resumen (total, % de resultado esperado, exitosos, fallidos, defectos conocidos…);
+- tabla por módulo;
+- fallas que requieren atención (fallidos, errores y defectos que ya no se reproducen);
+- detalle de cada escenario: ID, módulo, funcionalidad, resultado esperado,
+  prioridad, estado, duración y observación (error o defecto conocido).
+
+En GitHub Actions el PDF se publica en el artefacto `reportes`.
 
 ## Cómo funciona el registro incremental
 

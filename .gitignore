@@ -5,3 +5,4 @@ __pycache__/
 reportes/.escenarios*.tmp
 reportes/ejecuciones.csv
 test-results/
+reportes/reporte.pdf

@@ -21,4 +21,5 @@ jobs:
           name: reportes
           path: |
             reportes/*.csv
+            reportes/reporte.pdf
             test-results/
