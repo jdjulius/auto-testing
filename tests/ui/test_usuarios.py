@@ -32,6 +32,7 @@ DEFECTOS = {
     "ordenar": {
         "problem_user": "El ordenamiento no cambia la lista",
         "error_user": "Ordenar muestra un error y no cambia la lista",
+        "visual_user": "Los precios mostrados no quedan ordenados",
     },
     "agregar_todos": {
         "problem_user": "Algunos botones 'Add to cart' no funcionan",
@@ -44,10 +45,17 @@ DEFECTOS = {
 }
 
 
+# Defectos de tiempo: dependen de la carga del sitio, no se exige que aparezcan.
+NO_ESTRICTOS = {"login_rapido"}
+
+
 def usuarios_para(funcionalidad: str) -> list:
     defectos = DEFECTOS.get(funcionalidad, {})
+    estricto = funcionalidad not in NO_ESTRICTOS
     return [
-        pytest.param(u, marks=pytest.mark.xfail(reason=defectos[u])) if u in defectos else u
+        pytest.param(u, marks=pytest.mark.xfail(reason=defectos[u], strict=estricto))
+        if u in defectos
+        else u
         for u in USUARIOS
     ]
 
@@ -72,6 +80,7 @@ def test_login_rapido(page: Page, usuario):
     inicio = time.monotonic()
     login.ingresar(usuario, CLAVE)
     expect(page).to_have_url(re.compile(r"/inventory\.html$"), timeout=15_000)
+    expect(InventarioPage(page).productos).to_have_count(6, timeout=15_000)
     duracion = time.monotonic() - inicio
     assert duracion < UMBRAL_LOGIN_S, f"El login tardó {duracion:.1f} s"
 
