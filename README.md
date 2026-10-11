@@ -22,6 +22,7 @@ auto_testing/comprobante_pdf.py  PDF de cada compra realizada en las pruebas
 auto_testing/allure_integracion.py  Datos del escenario, capturas y entorno para Allure
 allurerc.mjs               Configuración del reporte Allure 3
 reportes/escenarios.csv    Catálogo de escenarios (versionado)
+reportes/escenarios.xlsx   El mismo catálogo en Excel (versionado)
 reportes/ejecuciones.csv   Historial de ejecuciones (local, ignorado por git)
 reportes/reporte.pdf       Reporte PDF de la última corrida (local, ignorado por git)
 reportes/compras/*.pdf     PDF de las compras de la última corrida (local, ignorado por git)

@@ -165,6 +165,30 @@ def test_csv_sin_comas_en_textos(tmp_path):
     assert '"' not in esc_csv.read_text(encoding="utf-8")
     columnas = {len(linea.split(",")) for linea in lineas}
     assert columnas == {len(lineas[0].split(","))}
+    assert ";" not in esc_csv.read_text(encoding="utf-8")  # Excel en español separa por ';'
     fila = _leer(esc_csv)[0]
-    assert fila["descripcion"] == "Subtotal; impuesto y total 'con IVA'"
-    assert fila["resultado_esperado"] == "Subtotal 39.98; impuesto 3.20;total 43.18 fin"
+    assert fila["descripcion"] == "Subtotal - impuesto y total 'con IVA'"
+    assert fila["resultado_esperado"] == "Subtotal 39.98 - impuesto 3.20 - total 43.18 fin"
+
+
+@pytest.mark.escenario(
+    modulo="Framework",
+    funcionalidad="Registro CSV",
+    descripcion="Generar el catálogo en Excel (.xlsx)",
+    resultado_esperado="escenarios.xlsx tiene encabezados en español y una fila por escenario con su estado",
+)
+def test_catalogo_excel(tmp_path):
+    from openpyxl import load_workbook
+
+    esc_csv = tmp_path / "escenarios.csv"
+    reg = RegistroEscenarios(esc_csv, tmp_path / "x.csv")
+    reg.registrar("t::a", descripcion="Agregar productos, calcular total", modulo="Carrito")
+    reg.registrar("t::b", descripcion="Quitar producto")
+    reg.registrar_resultado("t::a", "EXITOSO", "2026-01-01T00:00:00")
+    reg.guardar()
+    hoja = load_workbook(tmp_path / "escenarios.xlsx").active
+    filas = list(hoja.iter_rows(values_only=True))
+    assert filas[0][:4] == ("ID", "Módulo", "Funcionalidad", "Descripción")
+    assert [f[0] for f in filas[1:]] == ["ESC-0001", "ESC-0002"]
+    assert filas[1][3] == "Agregar productos - calcular total"
+    assert filas[1][7] == "EXITOSO" and filas[2][7] == "NO_EJECUTADO"

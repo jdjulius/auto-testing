@@ -201,13 +201,21 @@ Ejemplo de una fila después de tres corridas:
 
 ```csv
 id,nodeid,modulo,funcionalidad,descripcion,resultado_esperado,prioridad,fecha_alta,navegador,ultimo_estado,ultima_ejecucion,ejecuciones,fallos
-ESC-0009,tests/ui/test_checkout.py::test_resumen_montos[chromium],Checkout,Resumen,Calcular subtotal; impuesto (8%) y total,Subtotal 39.98; impuesto 3.20; total 43.18,Alta,2026-10-11T04:21:53,chromium,EXITOSO,2026-10-11T06:56:44,3,0
+ESC-0009,tests/ui/test_checkout.py::test_resumen_montos[chromium],Checkout,Resumen,Calcular subtotal - impuesto (8%) y total,Subtotal 39.98 - impuesto 3.20 - total 43.18,Alta,2026-10-11T04:21:53,chromium,EXITOSO,2026-10-11T06:56:44,3,0
 ```
 
-**La coma es solo el separador.** Al guardar, las comas dentro de los textos se
-reemplazan por `;`, las comillas dobles por simples y los saltos de línea por
-espacios. Así ningún campo va entre comillas y cada línea tiene siempre 13
-columnas: el archivo se puede abrir o partir por comas con cualquier herramienta.
+**La coma es solo el separador.** Al guardar, las comas y los punto y coma
+dentro de los textos se reemplazan por ` - `, las comillas dobles por simples y
+los saltos de línea por espacios. Así ningún campo va entre comillas y cada
+línea tiene siempre 13 columnas.
+
+**Para Excel, usa `reportes/escenarios.xlsx`.** Excel en español separa los CSV
+por `;` (no por `,`), así que al abrir el CSV con doble clic no reparte bien las
+columnas. Cada vez que se guarda el catálogo se genera también el `.xlsx`, con los
+mismos datos, encabezados en español, filtros, la primera fila fija y el estado
+coloreado (verde exitoso, rojo fallido, amarillo defecto conocido…). Si
+necesitas abrir el CSV en Excel: *Datos → Desde el texto/CSV*, origen
+*65001: Unicode (UTF-8)* y delimitador *Coma*.
 
 El archivo se reescribe de forma **atómica**: primero en un temporal y luego se
 reemplaza. Si la corrida se interrumpe, el catálogo no queda a medias.
@@ -232,6 +240,7 @@ cuándo empezó a fallar, cuánto tarda, etc.
 
 | Archivo | Qué contiene |
 |---|---|
+| `reportes/escenarios.xlsx` | El catálogo en Excel (mismos datos que el CSV) |
 | `reportes/reporte.pdf` | Resumen de la corrida, tabla por módulo, fallas que requieren atención y detalle de cada escenario |
 | `reportes/compras/compra-*.pdf` | Comprobante de cada compra hecha en las pruebas |
 | `reportes/allure-report/` | Reporte Allure con pasos, capturas y adjuntos (`npm run reporte`) |

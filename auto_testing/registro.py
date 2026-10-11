@@ -53,16 +53,20 @@ COLUMNAS_ESCENARIOS = [f.name for f in fields(Escenario)]
 COLUMNAS_EJECUCIONES = [f.name for f in fields(Ejecucion)]
 
 
+_SEPARADORES = re.compile(r"\s*[,;]\s*")
+
+
 def texto_csv(valor):
     """Deja el texto listo para un CSV sin comillas: la coma es solo el separador.
 
-    Las comas dentro del texto pasan a ';', las comillas dobles a simples y los
-    saltos de línea a espacios.
+    Las comas y los punto y coma del texto pasan a ' - ' (Excel en español usa
+    ';' como separador), las comillas dobles a simples y los saltos de línea a
+    espacios.
     """
     if not isinstance(valor, str):
         return valor
     valor = valor.replace("\r", " ").replace("\n", " ").replace('"', "'")
-    return valor.replace(", ", "; ").replace(",", ";")
+    return _SEPARADORES.sub(" - ", valor)
 
 
 def ahora() -> str:
@@ -92,7 +96,8 @@ class RegistroEscenarios:
     def guardar(self) -> None:
         """Reescribe el catálogo de forma atómica (archivo temporal + rename).
 
-        Los textos se guardan sin comas para que la coma sea solo el separador."""
+        Los textos se guardan sin comas para que la coma sea solo el separador,
+        y se genera además ``escenarios.xlsx`` para abrirlo en Excel."""
         self.ruta_escenarios.parent.mkdir(parents=True, exist_ok=True)
         fd, tmp = tempfile.mkstemp(
             dir=self.ruta_escenarios.parent, prefix=".escenarios", suffix=".tmp"
@@ -103,6 +108,19 @@ class RegistroEscenarios:
             for esc in sorted(self.escenarios.values(), key=lambda e: e.id):
                 writer.writerow({k: texto_csv(v) for k, v in asdict(esc).items()})
         os.replace(tmp, self.ruta_escenarios)
+        self._guardar_excel()
+
+    def _guardar_excel(self) -> None:
+        """Copia del catálogo en .xlsx, que Excel abre bien en cualquier idioma."""
+        try:
+            from auto_testing.excel import exportar_excel
+        except ImportError:  # openpyxl no instalado: solo se genera el CSV
+            return
+        exportar_excel(
+            self.ruta_escenarios.with_suffix(".xlsx"),
+            [{k: texto_csv(v) for k, v in asdict(e).items()}
+             for e in sorted(self.escenarios.values(), key=lambda e: e.id)],
+        )
 
     def agregar_ejecuciones(self, ejecuciones: list[Ejecucion]) -> None:
         """Agrega filas al historial sin tocar las existentes."""

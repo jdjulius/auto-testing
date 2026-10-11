@@ -10,3 +10,4 @@ reportes/compras/
 node_modules/
 reportes/allure-results/
 reportes/allure-report/
+reportes/.escenarios*.xlsx
