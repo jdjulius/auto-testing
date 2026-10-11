@@ -16,10 +16,14 @@ auto_testing/registro.py   Lectura/escritura incremental de los CSV
 auto_testing/plugin.py     Plugin de pytest (marcador @escenario, hooks, opciones)
 auto_testing/reporte_pdf.py  Reporte PDF de la corrida
 auto_testing/comprobante_pdf.py  PDF de cada compra realizada en las pruebas
+auto_testing/allure_integracion.py  Datos del escenario, capturas y entorno para Allure
+allurerc.mjs               Configuración del reporte Allure 3
 reportes/escenarios.csv    Catálogo de escenarios (versionado)
 reportes/ejecuciones.csv   Historial de ejecuciones (local, ignorado por git)
 reportes/reporte.pdf       Reporte PDF de la última corrida (local, ignorado por git)
 reportes/compras/*.pdf     PDF de las compras de la última corrida (local, ignorado por git)
+reportes/allure-results/   Resultados crudos de Allure (local, ignorado por git)
+reportes/allure-report/    Reporte Allure HTML (local, ignorado por git)
 ```
 
 ## Escenarios cubiertos
@@ -58,6 +62,7 @@ defecto desaparece, la prueba falla (XPASS estricto) para que se revise.
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 python -m playwright install chromium
+npm install                  # CLI de Allure 3 (solo para generar el reporte HTML)
 
 pytest                       # ejecuta todo y actualiza ambos CSV
 pytest tests/ui -k login     # solo un grupo
@@ -69,6 +74,9 @@ pytest --sin-pdf             # ejecuta sin generar el PDF
 pytest --reporte-pdf otro.pdf
 
 python -m auto_testing.reporte_pdf   # regenera el PDF de la última corrida desde los CSV
+
+npm run reporte              # genera el reporte Allure en reportes/allure-report/
+npm run reporte:abrir        # lo sirve y lo abre en el navegador
 ```
 
 En GitHub Actions (`.github/workflows/tests.yml`) se ejecuta todo en cada push
@@ -96,6 +104,31 @@ escenario por pantalla y, si falta algo, lista todos los componentes ausentes.
 resumen del paso 2 y genera `reportes/compras/compra-<carrito>.pdf` con
 comprador, pago, envío, productos, subtotal, impuesto, total, la confirmación
 y capturas de las pantallas *Overview* y *Complete!*.
+
+## Reporte Allure
+
+[Allure Report](https://allurereport.org/) es la alternativa en Python a Extent
+Reports: dashboard con gráficos, agrupación, severidad, pasos, capturas y
+adjuntos. Cada corrida de pytest escribe `reportes/allure-results/` y
+`npm run reporte` genera `reportes/allure-report/`:
+
+- `index.html`: portada con el resumen de la corrida.
+- `awesome/index.html`: reporte detallado, en español, agrupado por
+  **módulo → funcionalidad**. Cada escenario muestra:
+  - título `ESC-XXXX · descripción` y el resultado esperado;
+  - severidad según la prioridad (Crítica → blocker, Alta → critical,
+    Media → normal, Baja → minor) y etiquetas con el ID y el navegador;
+  - los **pasos** ejecutados (iniciar sesión, agregar al carrito, llenar datos…);
+  - la **captura de pantalla** final y, en las compras, el **PDF de la compra**;
+  - el error completo cuando falla.
+- `dashboard/index.html`: gráficos por estado, severidad y evolución.
+
+Los defectos conocidos (xfail) aparecen como *skipped* en la categoría
+"Defectos conocidos de la aplicación". Los metadatos incluyen la aplicación,
+el navegador, la versión de Python y el ID de la corrida. Cada archivo HTML es
+autocontenido: se abre con doble clic, sin servidor.
+
+En GitHub Actions el reporte se publica en el artefacto `reporte-allure`.
 
 ## Reporte PDF
 

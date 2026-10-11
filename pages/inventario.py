@@ -1,3 +1,4 @@
+import allure
 from playwright.sync_api import Page
 
 # Catálogo oficial de saucedemo: nombre -> precio.
@@ -31,12 +32,15 @@ class InventarioPage:
         self.menu = page.locator("#react-burger-menu-btn")
         self.logout = page.get_by_test_id("logout-sidebar-link")
 
+    @allure.step("Agregar al carrito: {nombre}")
     def agregar(self, nombre: str) -> None:
         self.page.get_by_test_id(f"add-to-cart-{slug(nombre)}").click()
 
+    @allure.step("Quitar del carrito: {nombre}")
     def quitar(self, nombre: str) -> None:
         self.page.get_by_test_id(f"remove-{slug(nombre)}").click()
 
+    @allure.step("Ordenar productos por '{valor}'")
     def ordenar(self, valor: str) -> None:
         self.orden.select_option(valor)
 
@@ -46,9 +50,11 @@ class InventarioPage:
     def lista_precios(self) -> list[float]:
         return [float(p.replace("$", "")) for p in self.precios.all_inner_texts()]
 
+    @allure.step("Ir al carrito")
     def ir_al_carrito(self) -> None:
         self.link_carrito.click()
 
+    @allure.step("Cerrar sesión desde el menú")
     def cerrar_sesion(self) -> None:
         self.menu.click()
         self.logout.click()

@@ -3,6 +3,7 @@
 import re
 from datetime import datetime
 
+import allure
 import pytest
 from playwright.sync_api import expect
 
@@ -215,3 +216,5 @@ def test_pdf_de_la_compra(inventario: InventarioPage, nombre_carrito, pytestconf
     )
     contenido = salida.read_bytes()
     assert contenido.startswith(b"%PDF") and len(contenido) > 10_000
+    allure.attach(contenido, name=f"PDF de la compra ({nombre_carrito})",
+                  attachment_type=allure.attachment_type.PDF)

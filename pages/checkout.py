@@ -1,6 +1,7 @@
 import re
 from dataclasses import dataclass
 
+import allure
 from playwright.sync_api import Page, expect
 
 
@@ -54,11 +55,13 @@ class CheckoutPage:
         self.imagen_confirmacion = page.get_by_test_id("pony-express")
         self.volver_inicio = page.get_by_test_id("back-to-products")
 
+    @allure.step("Llenar datos del comprador: {nombre} {apellido}, {codigo_postal}")
     def llenar_datos(self, nombre: str, apellido: str, codigo_postal: str) -> None:
         self.nombre.fill(nombre)
         self.apellido.fill(apellido)
         self.codigo_postal.fill(codigo_postal)
 
+    @allure.step("Completar el paso 1 y continuar")
     def completar_datos(self, nombre: str, apellido: str, codigo_postal: str) -> None:
         self.llenar_datos(nombre, apellido, codigo_postal)
         self.continuar.click()
@@ -70,6 +73,7 @@ class CheckoutPage:
             _monto(self.total.inner_text()),
         )
 
+    @allure.step("Leer el resumen del paso 2 (Overview)")
     def resumen(self) -> ResumenCompra:
         # Esperar a que el Overview esté cargado: count() no espera por sí solo.
         expect(self.titulo).to_have_text("Checkout: Overview")

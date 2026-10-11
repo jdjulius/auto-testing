@@ -120,10 +120,52 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     registro.guardar()
 
 
+def _base_url(config: pytest.Config) -> str:
+    url = getattr(config.option, "base_url", None)
+    if not url:
+        try:
+            url = config.getini("base_url")
+        except ValueError:  # pytest-base-url no está instalado
+            url = ""
+    return url or ""
+
+
+def _allure_activo(config: pytest.Config) -> bool:
+    return bool(getattr(config.option, "allure_report_dir", None))
+
+
+@pytest.fixture(autouse=True)
+def _escenario_en_allure(request: pytest.FixtureRequest):
+    """Vuelca ID, módulo, funcionalidad, prioridad y resultado esperado a Allure."""
+    registro = request.config.stash.get(_CLAVE, None)
+    if registro is not None and _allure_activo(request.config):
+        esc = registro.escenarios.get(request.node.nodeid)
+        if esc is not None:
+            from auto_testing.allure_integracion import aplicar_etiquetas
+
+            aplicar_etiquetas(esc)
+    yield
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_call(item: pytest.Item) -> None:
+    registro = item.config.stash.get(_CLAVE, None)
+    if registro is not None and _allure_activo(item.config):
+        esc = registro.escenarios.get(item.nodeid)
+        if esc is not None:
+            from auto_testing.allure_integracion import aplicar_titulo
+
+            aplicar_titulo(esc)
+
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item: pytest.Item, call):
     resultado = yield
     report = resultado.get_result()
+    if report.when == "call" and _allure_activo(item.config):
+        from auto_testing.allure_integracion import adjuntar_captura
+
+        adjuntar_captura(item)
     registro = item.config.stash.get(_CLAVE, None)
     if registro is None:
         return
@@ -180,12 +222,21 @@ def pytest_sessionfinish(session: pytest.Session) -> None:
     registro.guardar()
     registro.agregar_ejecuciones(list(ejecuciones.values()))
 
+    if _allure_activo(config):
+        from auto_testing.allure_integracion import escribir_entorno
+
+        escribir_entorno(config.option.allure_report_dir, {
+            "Aplicación": _base_url(config),
+            "Navegador": ",".join(getattr(config.option, "browser", None) or []),
+            "Corrida": config.stash[_CLAVE_RUN],
+        })
+
     ruta_pdf = config.stash.get(_CLAVE_PDF, None)
     if ruta_pdf is not None and ejecuciones:
         # Import diferido: reportlab solo hace falta si se genera el PDF.
         from auto_testing.reporte_pdf import generar_pdf
 
-        aplicacion = getattr(config.option, "base_url", None) or ""
+        aplicacion = _base_url(config)
         generar_pdf(ruta_pdf, registro.escenarios, list(ejecuciones.values()), aplicacion=aplicacion)
 
 

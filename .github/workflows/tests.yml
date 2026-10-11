@@ -14,7 +14,20 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements.txt
       - run: python -m playwright install --with-deps chromium
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
       - run: pytest --tracing retain-on-failure --screenshot only-on-failure
+      - name: Generar reporte Allure
+        if: always()
+        run: npx allure generate reportes/allure-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reporte-allure
+          path: reportes/allure-report/
       - uses: actions/upload-artifact@v4
         if: always()
         with:

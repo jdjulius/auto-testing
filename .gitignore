@@ -7,3 +7,6 @@ reportes/ejecuciones.csv
 test-results/
 reportes/reporte.pdf
 reportes/compras/
+node_modules/
+reportes/allure-results/
+reportes/allure-report/
