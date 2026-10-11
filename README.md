@@ -9,14 +9,17 @@ guarda de forma incremental en CSV**.
 
 ```
 pages/                     Page Objects (login, inventario, carrito, checkout)
+pages/mapa.py              Mapa de pantallas: ruta, título y componentes
 tests/ui/                  Pruebas de saucedemo (incluye redirecciones)
 tests/framework/           Pruebas del registro de escenarios
 auto_testing/registro.py   Lectura/escritura incremental de los CSV
 auto_testing/plugin.py     Plugin de pytest (marcador @escenario, hooks, opciones)
 auto_testing/reporte_pdf.py  Reporte PDF de la corrida
+auto_testing/comprobante_pdf.py  PDF de cada compra realizada en las pruebas
 reportes/escenarios.csv    Catálogo de escenarios (versionado)
 reportes/ejecuciones.csv   Historial de ejecuciones (local, ignorado por git)
 reportes/reporte.pdf       Reporte PDF de la última corrida (local, ignorado por git)
+reportes/compras/*.pdf     PDF de las compras de la última corrida (local, ignorado por git)
 ```
 
 ## Escenarios cubiertos
@@ -28,6 +31,10 @@ reportes/reporte.pdf       Reporte PDF de la última corrida (local, ignorado po
 | Carrito | contador del carrito; quitar producto; contenido del carrito; seguir comprando |
 | Checkout | compra completa; subtotal + impuesto 8% + total; campos obligatorios |
 | Redirecciones | páginas protegidas sin sesión → login; detalle de producto (por nombre e imagen) y volver; cancelar checkout paso 1 → carrito y paso 2 → inventario; "Back Home" tras la compra; menú All Items, About y Reset App State; enlaces de Twitter, Facebook y LinkedIn |
+| Pantallas | ruta, título y componentes de: login, inventario, detalle, carrito, checkout paso 1, paso 2, completo y menú lateral |
+| Checkout paso 1 | campos vacíos con placeholder; llenar formulario conserva valores y avanza; cerrar el error |
+| Checkout paso 2 | productos, cantidades y precios; pago (SauceCard #31337) y envío (Free Pony Express); subtotal, impuesto 8% y total con 1, 3 y 6 productos |
+| Checkout completo | confirmación (encabezado, texto, imagen, Back Home); Back Home vuelve al inventario vacío; **PDF de la compra** |
 | Usuarios | login en < 3 s, imágenes, precios, ordenar por precio, agregar los 6 productos y checkout, con cada usuario del sitio |
 
 ### Defectos detectados por usuario
@@ -66,6 +73,29 @@ python -m auto_testing.reporte_pdf   # regenera el PDF de la última corrida des
 
 En GitHub Actions (`.github/workflows/tests.yml`) se ejecuta todo en cada push
 y los CSV, capturas y trazas de fallos se publican como artefacto `reportes`.
+
+## Mapa de pantallas
+
+| Pantalla | Ruta | Componentes (data-test) |
+|---|---|---|
+| Login | `/` | username, password, login-button, login-credentials, login-password |
+| Inventario | `/inventory.html` | title, open-menu, shopping-cart-link, product-sort-container, inventory-list, inventory-item ×6, footer |
+| Detalle | `/inventory-item.html?id=N` | back-to-products, inventory-item-name/desc/price, imagen, add-to-cart |
+| Carrito | `/cart.html` | title, cart-list, cart-quantity-label, cart-desc-label, inventory-item, continue-shopping, checkout |
+| Checkout paso 1 | `/checkout-step-one.html` | title, firstName, lastName, postalCode, cancel, continue |
+| Checkout paso 2 | `/checkout-step-two.html` | title, cart-list, payment-info, shipping-info, subtotal/tax/total-label, cancel, finish |
+| Checkout completo | `/checkout-complete.html` | title, pony-express, complete-header, complete-text, back-to-products (Back Home) |
+| Menú lateral | (todas) | inventory-, about-, logout-, reset-sidebar-link |
+
+El detalle completo está en `pages/mapa.py`; `tests/ui/test_pantallas.py` genera un
+escenario por pantalla y, si falta algo, lista todos los componentes ausentes.
+
+## PDF de la compra
+
+`test_pdf_de_la_compra` completa una compra (1, 3 y 6 productos), lee el
+resumen del paso 2 y genera `reportes/compras/compra-<carrito>.pdf` con
+comprador, pago, envío, productos, subtotal, impuesto, total, la confirmación
+y capturas de las pantallas *Overview* y *Complete!*.
 
 ## Reporte PDF
 

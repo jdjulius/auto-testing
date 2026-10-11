@@ -93,13 +93,13 @@ def test_paso1_cerrar_error(inventario: InventarioPage):
     resultado_esperado="Cada producto aparece con cantidad 1 y su precio de catálogo",
     prioridad="Alta",
 )
-@pytest.mark.parametrize("carrito", CARRITOS.values(), ids=CARRITOS.keys())
-def test_paso2_productos(inventario: InventarioPage, carrito):
-    checkout = ir_a_checkout(inventario, carrito)
+@pytest.mark.parametrize("productos", CARRITOS.values(), ids=CARRITOS.keys())
+def test_paso2_productos(inventario: InventarioPage, productos):
+    checkout = ir_a_checkout(inventario, productos)
     checkout.completar_datos(COMPRADOR["nombre"], COMPRADOR["apellido"], COMPRADOR["codigo_postal"])
     expect(checkout.titulo).to_have_text("Checkout: Overview")
     resumen = checkout.resumen()
-    assert sorted(l.nombre for l in resumen.lineas) == sorted(carrito)
+    assert sorted(l.nombre for l in resumen.lineas) == sorted(productos)
     for linea in resumen.lineas:
         assert linea.cantidad == 1, linea
         assert linea.precio == PRODUCTOS[linea.nombre], linea
@@ -128,12 +128,12 @@ def test_paso2_pago_envio(inventario: InventarioPage):
     resultado_esperado="Subtotal = suma de precios; impuesto = 8% redondeado; total = subtotal + impuesto",
     prioridad="Crítica",
 )
-@pytest.mark.parametrize("carrito", CARRITOS.values(), ids=CARRITOS.keys())
-def test_paso2_totales(inventario: InventarioPage, carrito):
-    checkout = ir_a_checkout(inventario, carrito)
+@pytest.mark.parametrize("productos", CARRITOS.values(), ids=CARRITOS.keys())
+def test_paso2_totales(inventario: InventarioPage, productos):
+    checkout = ir_a_checkout(inventario, productos)
     checkout.completar_datos(COMPRADOR["nombre"], COMPRADOR["apellido"], COMPRADOR["codigo_postal"])
     resumen = checkout.resumen()
-    esperado = round(sum(PRODUCTOS[n] for n in carrito), 2)
+    esperado = round(sum(PRODUCTOS[n] for n in productos), 2)
     assert resumen.subtotal == pytest.approx(esperado)
     assert resumen.subtotal == pytest.approx(sum(l.precio * l.cantidad for l in resumen.lineas))
     assert resumen.impuesto == pytest.approx(round(esperado * TASA_IMPUESTO, 2))
@@ -191,6 +191,7 @@ def test_pdf_de_la_compra(inventario: InventarioPage, nombre_carrito, pytestconf
     checkout = ir_a_checkout(inventario, CARRITOS[nombre_carrito])
     checkout.completar_datos(COMPRADOR["nombre"], COMPRADOR["apellido"], COMPRADOR["codigo_postal"])
     resumen = checkout.resumen()
+    assert len(resumen.lineas) == len(CARRITOS[nombre_carrito])
     captura_resumen = page.screenshot(full_page=True)
     checkout.finalizar.click()
     expect(checkout.confirmacion).to_have_text("Thank you for your order!")

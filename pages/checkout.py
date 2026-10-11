@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 
 def _monto(texto: str) -> float:
@@ -71,6 +71,9 @@ class CheckoutPage:
         )
 
     def resumen(self) -> ResumenCompra:
+        # Esperar a que el Overview esté cargado: count() no espera por sí solo.
+        expect(self.titulo).to_have_text("Checkout: Overview")
+        expect(self.items.first).to_be_visible()
         lineas = []
         for i in range(self.items.count()):
             item = self.items.nth(i)
