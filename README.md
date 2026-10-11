@@ -25,6 +25,22 @@ reportes/ejecuciones.csv   Historial de ejecuciones (local, ignorado por git)
 | Inventario | catálogo de 6 productos con precios; ordenar A-Z, Z-A, precio ascendente/descendente |
 | Carrito | contador del carrito; quitar producto; contenido del carrito; seguir comprando |
 | Checkout | compra completa; subtotal + impuesto 8% + total; campos obligatorios |
+| Usuarios | login en < 3 s, imágenes, precios, ordenar por precio, agregar los 6 productos y checkout, con cada usuario del sitio |
+
+### Defectos detectados por usuario
+
+`tests/ui/test_usuarios.py` repite las mismas funcionalidades con
+`standard_user`, `problem_user`, `performance_glitch_user`, `error_user` y
+`visual_user` (`locked_out_user` se cubre en `test_login.py`). Los defectos
+conocidos se marcan como `xfail` y quedan como **XFAIL** en el CSV; si un
+defecto desaparece, la prueba falla (XPASS estricto) para que se revise.
+
+| Usuario | Defectos |
+|---|---|
+| problem_user | imágenes repetidas, no ordena, botones "Add to cart" que no funcionan, Last Name no se conserva en el checkout |
+| performance_glitch_user | login más lento que el umbral de 3 s (no estricto: depende de la carga) |
+| error_user | no ordena, botones "Add to cart" que no funcionan, checkout no se completa |
+| visual_user | imágenes que no corresponden, precios distintos al catálogo, lista no ordenada |
 
 ## Uso
 
