@@ -40,39 +40,62 @@ COLORES_ESTADO = {
 
 
 def exportar_excel(ruta: Path, escenarios: list[dict]) -> Path:
+    """Catálogo de escenarios."""
+    return exportar_tabla(
+        ruta, escenarios, COLUMNAS, hoja="Escenarios",
+        colores={"ultimo_estado": COLORES_ESTADO},
+        ajustar=("descripcion", "resultado_esperado"),
+    )
+
+
+def exportar_tabla(
+    ruta: Path,
+    filas: list[dict],
+    columnas: dict[str, tuple[str, int]],
+    *,
+    hoja: str = "Hoja1",
+    colores: dict[str, dict[str, str]] | None = None,
+    ajustar: tuple[str, ...] = (),
+) -> Path:
+    """Escribe `filas` en un .xlsx con encabezado, anchos, filtros y fila fija.
+
+    `columnas` es {clave: (encabezado, ancho)}; `colores` pinta una columna según su
+    valor ({clave: {valor: color}}); `ajustar` son las columnas con texto en varias líneas.
+    """
     ruta = Path(ruta)
     libro = Workbook()
-    hoja = libro.active
-    hoja.title = "Escenarios"
+    hoja_xl = libro.active
+    hoja_xl.title = hoja
 
-    claves = list(COLUMNAS)
-    hoja.append([COLUMNAS[c][0] for c in claves])
-    for esc in escenarios:
-        hoja.append([esc.get(c, "") for c in claves])
+    claves = list(columnas)
+    hoja_xl.append([columnas[c][0] for c in claves])
+    for fila in filas:
+        hoja_xl.append([fila.get(c, "") for c in claves])
 
     encabezado = PatternFill("solid", start_color="132322")
     for i, clave in enumerate(claves, start=1):
-        celda = hoja.cell(row=1, column=i)
+        celda = hoja_xl.cell(row=1, column=i)
         celda.font = Font(bold=True, color="FFFFFF")
         celda.fill = encabezado
         celda.alignment = Alignment(vertical="center")
-        hoja.column_dimensions[get_column_letter(i)].width = COLUMNAS[clave][1]
+        hoja_xl.column_dimensions[get_column_letter(i)].width = columnas[clave][1]
 
-    col_estado = claves.index("ultimo_estado") + 1
-    ajustar = {claves.index(c) + 1 for c in ("descripcion", "resultado_esperado")}
-    for fila in range(2, hoja.max_row + 1):
-        estado = hoja.cell(row=fila, column=col_estado)
-        color = COLORES_ESTADO.get(str(estado.value))
-        if color:
-            estado.fill = PatternFill("solid", start_color=color)
-        for col in ajustar:
-            hoja.cell(row=fila, column=col).alignment = Alignment(wrap_text=True, vertical="top")
+    pintar = {claves.index(c) + 1: paleta for c, paleta in (colores or {}).items() if c in claves}
+    envolver = {claves.index(c) + 1 for c in ajustar if c in claves}
+    for fila in range(2, hoja_xl.max_row + 1):
+        for col, paleta in pintar.items():
+            celda = hoja_xl.cell(row=fila, column=col)
+            color = paleta.get(str(celda.value))
+            if color:
+                celda.fill = PatternFill("solid", start_color=color)
+        for col in envolver:
+            hoja_xl.cell(row=fila, column=col).alignment = Alignment(wrap_text=True, vertical="top")
 
-    hoja.freeze_panes = "B2"
-    hoja.auto_filter.ref = hoja.dimensions
+    hoja_xl.freeze_panes = "B2"
+    hoja_xl.auto_filter.ref = hoja_xl.dimensions
 
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp = tempfile.mkstemp(dir=ruta.parent, prefix=".escenarios", suffix=".xlsx")
+    fd, tmp = tempfile.mkstemp(dir=ruta.parent, prefix=f".{ruta.stem}", suffix=".xlsx")
     os.close(fd)
     libro.save(tmp)
     os.replace(tmp, ruta)
