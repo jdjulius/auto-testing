@@ -5,7 +5,8 @@
   "scripts": {
     "reporte:saucedemo-ui": "allure generate proyectos/saucedemo-ui/reportes/allure-results -o proyectos/saucedemo-ui/reportes/allure-report --name saucedemo-ui",
     "reporte:toolshop-ui": "allure generate proyectos/toolshop-ui/reportes/allure-results -o proyectos/toolshop-ui/reportes/allure-report --name toolshop-ui",
-    "reporte:toolshop-api": "allure generate proyectos/toolshop-api/reportes/allure-results -o proyectos/toolshop-api/reportes/allure-report --name toolshop-api"
+    "reporte:toolshop-api": "allure generate proyectos/toolshop-api/reportes/allure-results -o proyectos/toolshop-api/reportes/allure-report --name toolshop-api",
+    "reporte:demoqa-ui": "allure generate proyectos/demoqa-ui/reportes/allure-results -o proyectos/demoqa-ui/reportes/allure-report --name demoqa-ui"
   },
   "devDependencies": {
     "allure": "3.20.1"

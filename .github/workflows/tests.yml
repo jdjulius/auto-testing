@@ -28,6 +28,9 @@ jobs:
             toolshop-api:
               - 'proyectos/toolshop-api/**'
               - 'libs/auto-testing-core/**'
+            demoqa-ui:
+              - 'proyectos/demoqa-ui/**'
+              - 'libs/auto-testing-core/**'
 
   core:
     needs: cambios
@@ -56,6 +59,8 @@ jobs:
             navegador: true
           - nombre: toolshop-api
             navegador: false
+          - nombre: demoqa-ui
+            navegador: true
     if: needs.cambios.outputs.proyectos != '[]' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     defaults:

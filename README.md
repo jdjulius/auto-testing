@@ -21,6 +21,7 @@ proyectos/
   saucedemo-ui/               UI de saucedemo.com (Playwright) — 145 escenarios
   toolshop-ui/                UI de practicesoftwaretesting.com (Playwright) — 22 escenarios
   toolshop-api/               API de practicesoftwaretesting.com (httpx, sin navegador) — 29 escenarios
+  demoqa-ui/                  UI de demoqa.com (Playwright)
 docs/                         documentación
 .github/workflows/tests.yml   CI: un job por proyecto, solo si cambió
 package.json, allurerc.mjs    reporte Allure (compartido)
@@ -44,6 +45,7 @@ proyectos/<proyecto>/
 | `saucedemo-ui` | UI | login, inventario, carrito, checkout, redirecciones, pantallas, usuarios especiales, sesión y seguridad, responsive | Playwright |
 | `toolshop-ui` | UI | catálogo, búsqueda, orden, categorías, detalle, carrito, login, mapa de pantallas | Playwright |
 | `toolshop-api` | API | productos, paginación, búsqueda, filtros, categorías, marcas, login, perfil, permisos, facturas, carrito; esquemas JSON | httpx, jsonschema |
+| `demoqa-ui` | UI | Elements, Forms, Alerts/Frame/Windows, Widgets, Interactions, Book Store Application | Playwright |
 
 ## Uso
 
