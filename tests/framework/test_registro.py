@@ -188,7 +188,9 @@ def test_catalogo_excel(tmp_path):
     reg.guardar()
     hoja = load_workbook(tmp_path / "escenarios.xlsx").active
     filas = list(hoja.iter_rows(values_only=True))
-    assert filas[0][:4] == ("ID", "Módulo", "Funcionalidad", "Descripción")
-    assert [f[0] for f in filas[1:]] == ["ESC-0001", "ESC-0002"]
-    assert filas[1][3] == "Agregar productos - calcular total"
-    assert filas[1][7] == "EXITOSO" and filas[2][7] == "NO_EJECUTADO"
+    col = {nombre: i for i, nombre in enumerate(filas[0])}
+    assert {"ID", "Capa", "Módulo", "Funcionalidad", "Descripción", "Último estado"} <= set(col)
+    assert [f[col["ID"]] for f in filas[1:]] == ["ESC-0001", "ESC-0002"]
+    assert filas[1][col["Descripción"]] == "Agregar productos - calcular total"
+    assert filas[1][col["Último estado"]] == "EXITOSO"
+    assert filas[2][col["Último estado"]] == "NO_EJECUTADO"

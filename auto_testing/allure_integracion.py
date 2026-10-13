@@ -35,6 +35,8 @@ CATEGORIAS = """[
 
 def aplicar_etiquetas(esc) -> None:
     """Se llama en el setup: así las etiquetas quedan aunque falle un fixture."""
+    if esc.capa:
+        allure.dynamic.epic(esc.capa)
     if esc.modulo:
         allure.dynamic.feature(esc.modulo)
         allure.dynamic.parent_suite(esc.modulo)

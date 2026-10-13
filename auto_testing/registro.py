@@ -32,6 +32,7 @@ class Escenario:
     prioridad: str
     fecha_alta: str
     navegador: str = ""
+    capa: str = ""
     ultimo_estado: str = "NO_EJECUTADO"
     ultima_ejecucion: str = ""
     ejecuciones: int = 0
@@ -155,6 +156,7 @@ class RegistroEscenarios:
         resultado_esperado: str = "",
         prioridad: str = "Media",
         navegador: str = "",
+        capa: str = "",
     ) -> Escenario:
         """Da de alta el escenario si es nuevo; si ya existe, refresca su
         documentación (descripción, módulo, etc.) sin alterar su ID ni historial."""
@@ -167,6 +169,7 @@ class RegistroEscenarios:
                 "resultado_esperado": resultado_esperado,
                 "prioridad": prioridad,
                 "navegador": navegador,
+                "capa": capa,
             }.items():
                 if valor:
                     setattr(existente, campo, valor)
@@ -185,6 +188,7 @@ class RegistroEscenarios:
             prioridad=prioridad,
             fecha_alta=ahora(),
             navegador=navegador,
+            capa=capa,
         )
         self.escenarios[nodeid] = esc
         self.nuevos.append(esc)

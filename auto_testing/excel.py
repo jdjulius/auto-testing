@@ -13,6 +13,7 @@ from openpyxl.utils import get_column_letter
 # columna del CSV -> (encabezado, ancho)
 COLUMNAS = {
     "id": ("ID", 11),
+    "capa": ("Capa", 11),
     "modulo": ("Módulo", 20),
     "funcionalidad": ("Funcionalidad", 24),
     "descripcion": ("Descripción", 55),

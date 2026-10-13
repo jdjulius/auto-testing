@@ -62,11 +62,21 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     )
 
 
+# carpeta de la prueba -> capa del escenario
+CAPAS = {"ui": "UI", "e2e": "UI", "api": "API", "apis": "API", "framework": "Framework"}
+
+
+@pytest.hookimpl(tryfirst=True)
 def pytest_configure(config: pytest.Config) -> None:
+    # --alluredir relativo se resuelve respecto del sitio (rootdir), no del directorio
+    # desde el que se invoca pytest. tryfirst: antes de que allure-pytest lo lea.
+    alluredir = getattr(config.option, "allure_report_dir", None)
+    if alluredir and not Path(alluredir).is_absolute():
+        config.option.allure_report_dir = str(Path(config.rootpath) / alluredir)
     config.addinivalue_line(
         "markers",
         "escenario(id=None, modulo='', funcionalidad='', descripcion='', "
-        "resultado_esperado='', prioridad='Media'): documenta el escenario de prueba",
+        "resultado_esperado='', prioridad='Media', capa=''): documenta el escenario de prueba",
     )
     if config.getoption("--sin-registro"):
         return
@@ -93,6 +103,9 @@ def _documentacion(item: pytest.Item) -> dict:
         datos["descripcion"] = doc.splitlines()[0] if doc else item.name
     if not datos.get("modulo"):
         datos["modulo"] = Path(str(item.path)).stem.removeprefix("test_")
+    if not datos.get("capa"):
+        carpetas = Path(str(item.path)).relative_to(item.config.rootpath).parts[:-1]
+        datos["capa"] = next((CAPAS[c] for c in carpetas if c in CAPAS), "")
     callspec = getattr(item, "callspec", None)
     variante = callspec.id if callspec is not None else ""
     navegador = callspec.params.get("browser_name") if callspec is not None else None
