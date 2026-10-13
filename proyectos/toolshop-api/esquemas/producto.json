@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Producto",
+  "type": "object",
+  "required": ["id", "name", "description", "price", "is_rental", "in_stock", "category", "brand", "product_image"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "description": {"type": ["string", "null"]},
+    "price": {"type": "number", "minimum": 0},
+    "is_location_offer": {"type": "boolean"},
+    "is_rental": {"type": "boolean"},
+    "in_stock": {"type": "boolean"},
+    "is_eco_friendly": {"type": "boolean"},
+    "co2_rating": {"type": ["string", "null"]},
+    "category": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {"id": {"type": "string"}, "name": {"type": "string"}, "slug": {"type": "string"}}
+    },
+    "brand": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {"id": {"type": "string"}, "name": {"type": "string"}}
+    },
+    "product_image": {
+      "type": "object",
+      "required": ["id", "file_name"],
+      "properties": {"id": {"type": "string"}, "file_name": {"type": "string"}, "title": {"type": ["string", "null"]}}
+    }
+  }
+}

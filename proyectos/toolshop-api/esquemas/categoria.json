@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Categoría (árbol)",
+  "type": "object",
+  "required": ["id", "name", "slug"],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string", "minLength": 1},
+    "slug": {"type": "string", "minLength": 1},
+    "parent_id": {"type": ["string", "null"]},
+    "sub_categories": {"type": "array", "items": {"$ref": "#"}}
+  }
+}

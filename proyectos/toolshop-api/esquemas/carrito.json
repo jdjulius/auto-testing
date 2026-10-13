@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Carrito",
+  "type": "object",
+  "required": ["id", "cart_items"],
+  "properties": {
+    "id": {"type": "string"},
+    "cart_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "product_id", "quantity", "product"],
+        "properties": {
+          "id": {"type": "string"},
+          "product_id": {"type": "string"},
+          "quantity": {"type": "integer", "minimum": 1},
+          "product": {"type": "object", "required": ["id", "name", "price"]}
+        }
+      }
+    }
+  }
+}

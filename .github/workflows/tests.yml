@@ -3,37 +3,97 @@ name: tests
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
-  pytest:
+  # Qué proyectos cambiaron: cada uno se ejecuta solo si cambió él o la librería común.
+  cambios:
     runs-on: ubuntu-latest
+    outputs:
+      proyectos: ${{ steps.filtro.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: filtro
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            core:
+              - 'libs/auto-testing-core/**'
+            saucedemo-ui:
+              - 'proyectos/saucedemo-ui/**'
+              - 'libs/auto-testing-core/**'
+            toolshop-ui:
+              - 'proyectos/toolshop-ui/**'
+              - 'libs/auto-testing-core/**'
+            toolshop-api:
+              - 'proyectos/toolshop-api/**'
+              - 'libs/auto-testing-core/**'
+
+  core:
+    needs: cambios
+    if: contains(needs.cambios.outputs.proyectos, 'core') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: libs/auto-testing-core
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: pytest
+
+  proyecto:
+    needs: cambios
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nombre: saucedemo-ui
+            navegador: true
+          - nombre: toolshop-ui
+            navegador: true
+          - nombre: toolshop-api
+            navegador: false
+    if: needs.cambios.outputs.proyectos != '[]' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: proyectos/${{ matrix.nombre }}
+    steps:
+      - name: ¿Hay cambios en el proyecto?
+        id: aplica
+        working-directory: .
+        run: echo "si=${{ contains(needs.cambios.outputs.proyectos, matrix.nombre) || github.event_name == 'workflow_dispatch' }}" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        if: steps.aplica.outputs.si == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.aplica.outputs.si == 'true'
+        with:
+          python-version: "3.12"
       - run: pip install -r requirements.txt
+        if: steps.aplica.outputs.si == 'true'
       - run: python -m playwright install --with-deps chromium
+        if: steps.aplica.outputs.si == 'true' && matrix.navegador
+      - run: pytest
+        if: steps.aplica.outputs.si == 'true'
       - uses: actions/setup-node@v4
+        if: always() && steps.aplica.outputs.si == 'true'
         with:
           node-version: "22"
           cache: npm
-      - run: npm ci
-      - run: pytest --tracing retain-on-failure --screenshot only-on-failure
       - name: Generar reporte Allure
-        if: always()
-        run: npx allure generate reportes/allure-results
+        if: always() && steps.aplica.outputs.si == 'true'
+        working-directory: .
+        run: |
+          npm ci
+          npx allure generate proyectos/${{ matrix.nombre }}/reportes/allure-results \
+            -o proyectos/${{ matrix.nombre }}/reportes/allure-report --name "${{ matrix.nombre }}"
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && steps.aplica.outputs.si == 'true'
         with:
-          name: reporte-allure
-          path: reportes/allure-report/
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: reportes
+          name: reportes-${{ matrix.nombre }}
           path: |
-            reportes/*.csv
-            reportes/reporte.pdf
-            reportes/compras/
-            test-results/
+            proyectos/${{ matrix.nombre }}/reportes/
+            proyectos/${{ matrix.nombre }}/test-results/

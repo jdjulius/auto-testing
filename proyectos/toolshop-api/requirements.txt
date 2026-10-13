@@ -1,0 +1,5 @@
+# Desde proyectos/toolshop-api:  pip install -r requirements.txt
+# Proyecto de API: no necesita navegador ni Playwright.
+-e ../../libs/auto-testing-core[allure]
+httpx>=0.27
+jsonschema>=4.20

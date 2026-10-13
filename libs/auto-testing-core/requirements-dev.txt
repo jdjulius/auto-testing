@@ -1,0 +1,2 @@
+# Desde libs/auto-testing-core:  pip install -r requirements-dev.txt
+-e .[allure]

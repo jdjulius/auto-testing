@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auto-testing-core"
+version = "1.0.0"
+description = "Registro incremental de escenarios de prueba para pytest: catálogo CSV/Excel, historial, PDF y Allure"
+requires-python = ">=3.10"
+dependencies = [
+    "pytest>=8.0",
+    "reportlab>=4.0",
+    "openpyxl>=3.1",
+]
+
+[project.optional-dependencies]
+# Integración con Allure (etiquetas, títulos, capturas)
+allure = ["allure-pytest>=2.13"]
+# Captura de APIs consumidas por la UI (experimental)
+captura = ["playwright>=1.40"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

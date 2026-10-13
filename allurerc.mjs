@@ -1,12 +1,12 @@
 import { defineConfig } from "allure";
 
 export default defineConfig({
-  name: "auto-testing · saucedemo",
+  name: "auto-testing",
   output: "reportes/allure-report",
   plugins: {
     awesome: {
       options: {
-        reportName: "auto-testing · saucedemo",
+        reportName: "auto-testing",
         reportLanguage: "es",
         singleFile: true,
         groupBy: ["feature", "story"],
@@ -14,7 +14,7 @@ export default defineConfig({
     },
     dashboard: {
       options: {
-        reportName: "auto-testing · saucedemo (dashboard)",
+        reportName: "auto-testing (dashboard)",
         reportLanguage: "es",
         singleFile: true,
       },

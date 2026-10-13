@@ -1,5 +1,13 @@
 # Levantamiento y registro de escenarios de prueba
 
+> **Estructura actual (monorepo):** el framework está en
+> `libs/auto-testing-core/src/auto_testing/` y cada aplicación es un proyecto en
+> `proyectos/<proyecto>/` con sus propios `tests/`, `pages/`, `pytest.ini` y
+> `reportes/`. Las rutas de esta guía (`tests/ui/…`, `reportes/…`, `pages/…`) son
+> relativas a la carpeta del proyecto, y los comandos se ejecutan desde ahí. El
+> reporte Allure se genera desde la raíz con `npm run reporte:<proyecto>`. Ver
+> [ARQUITECTURA.md](ARQUITECTURA.md).
+
 Este documento explica cómo el proyecto **descubre, documenta, numera y registra**
 los escenarios de prueba, y cómo guarda sus resultados de forma incremental.
 
@@ -243,7 +251,7 @@ cuándo empezó a fallar, cuánto tarda, etc.
 | `reportes/escenarios.xlsx` | El catálogo en Excel (mismos datos que el CSV) |
 | `reportes/reporte.pdf` | Resumen de la corrida, tabla por módulo, fallas que requieren atención y detalle de cada escenario |
 | `reportes/compras/compra-*.pdf` | Comprobante de cada compra hecha en las pruebas |
-| `reportes/allure-report/` | Reporte Allure con pasos, capturas y adjuntos (`npm run reporte`) |
+| `reportes/allure-report/` | Reporte Allure con pasos, capturas y adjuntos (`npm run reporte:<proyecto>`) |
 
 Los tres toman los datos del escenario (ID, módulo, funcionalidad, prioridad,
 resultado esperado) del mismo registro.
@@ -358,7 +366,7 @@ de redirecciones: se agregó en ese momento.
 | `pytest --escenarios-csv X --ejecuciones-csv Y` | Usa otros archivos de catálogo e historial |
 | `pytest --browser-channel chrome` | Usa el Chrome instalado en vez del Chromium de Playwright |
 | `python -m auto_testing.reporte_pdf` | Regenera el PDF de la última corrida desde los CSV |
-| `npm run reporte` | Genera el reporte Allure en `reportes/allure-report/` |
+| `npm run reporte:<proyecto>` (desde la raíz) | Genera el reporte Allure en `proyectos/<proyecto>/reportes/allure-report/` |
 
 ---
 

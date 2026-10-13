@@ -1,5 +1,13 @@
 # Cómo usar este proyecto con otra página web
 
+> **Estructura actual (monorepo):** el framework está en
+> `libs/auto-testing-core/src/auto_testing/` y cada aplicación es un proyecto en
+> `proyectos/<proyecto>/` con sus propios `tests/`, `pages/`, `pytest.ini` y
+> `reportes/`. Las rutas de esta guía (`tests/ui/…`, `reportes/…`, `pages/…`) son
+> relativas a la carpeta del proyecto, y los comandos se ejecutan desde ahí. El
+> reporte Allure se genera desde la raíz con `npm run reporte:<proyecto>`. Ver
+> [ARQUITECTURA.md](ARQUITECTURA.md).
+
 Esta guía explica qué cambiar para probar **otra aplicación web** con el mismo
 sistema: levantamiento incremental de escenarios en CSV/Excel, historial,
 reporte PDF y reporte Allure.
@@ -416,7 +424,7 @@ def test_pantalla(page: Page, pantalla: Pantalla):
 ```bash
 pytest --collect-only -q      # 1) levanta los escenarios sin ejecutarlos
 pytest                        # 2) ejecuta y registra resultados
-npm run reporte               # 3) genera el reporte Allure
+npm run reporte:<proyecto>    # 3) genera el reporte Allure (desde la raíz)
 ```
 
 Con el ejemplo, el primer paso muestra:
@@ -442,7 +450,7 @@ Se generan los mismos archivos que con saucedemo:
 | `reportes/escenarios.csv` y `.xlsx` | Catálogo de escenarios con su último estado |
 | `reportes/ejecuciones.csv` | Historial de cada corrida |
 | `reportes/reporte.pdf` | Reporte PDF de la corrida |
-| `reportes/allure-report/` | Reporte Allure (después de `npm run reporte`) |
+| `reportes/allure-report/` | Reporte Allure (después de `npm run reporte:<proyecto>`) |
 
 Haz commit de `reportes/escenarios.csv` y `reportes/escenarios.xlsx` junto con
 las pruebas.
@@ -591,7 +599,7 @@ catálogo tiene su propia numeración desde `ESC-0001`.
 4. Releva las pantallas: rutas, componentes y selectores estables.
 5. Escribe `pages/mapa.py` y un Page Object por pantalla.
 6. Escribe los fixtures y los escenarios con `@pytest.mark.escenario`.
-7. `pytest --collect-only` → `pytest` → `npm run reporte`.
+7. `pytest --collect-only` → `pytest` → `npm run reporte:<proyecto>` (desde la raíz).
 8. Marca los defectos reales con `xfail(strict=True)`.
 
 El registro de escenarios, el historial, el Excel, el PDF y el reporte Allure

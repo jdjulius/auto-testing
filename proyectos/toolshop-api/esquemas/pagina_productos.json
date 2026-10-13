@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Página de productos",
+  "type": "object",
+  "required": ["current_page", "data", "last_page", "per_page", "total"],
+  "properties": {
+    "current_page": {"type": "integer", "minimum": 1},
+    "last_page": {"type": "integer", "minimum": 1},
+    "per_page": {"type": "integer", "minimum": 1},
+    "total": {"type": "integer", "minimum": 0},
+    "from": {"type": ["integer", "null"]},
+    "to": {"type": ["integer", "null"]},
+    "data": {"type": "array", "items": {"$ref": "producto.json"}}
+  }
+}

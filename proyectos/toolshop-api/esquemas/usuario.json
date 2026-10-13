@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Usuario",
+  "type": "object",
+  "required": ["id", "first_name", "last_name", "email"],
+  "properties": {
+    "id": {"type": "string"},
+    "first_name": {"type": "string"},
+    "last_name": {"type": "string"},
+    "email": {"type": "string", "pattern": "^[^@\\s]+@[^@\\s]+$"},
+    "phone": {"type": ["string", "null"]},
+    "dob": {"type": ["string", "null"]},
+    "address": {"type": ["object", "null"]},
+    "totp_enabled": {"type": "boolean"}
+  },
+  "not": {"anyOf": [{"required": ["password"]}]}
+}
