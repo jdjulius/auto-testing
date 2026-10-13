@@ -1,0 +1,48 @@
+- generic [ref=f418e2]:
+  - banner [ref=f418e3]:
+    - link [ref=f418e4] [cursor=pointer]:
+      - /url: https://demoqa.com
+  - generic [ref=f418e8]:
+    - generic [ref=f418e11]:
+      - generic [ref=f418e12]:
+        - generic [ref=f418e13] [cursor=pointer]: Elements
+        - list [ref=f418e25]:
+          - listitem [ref=f418e26] [cursor=pointer]:
+            - link "Text Box" [ref=f418e27]:
+              - /url: /text-box
+          - listitem [ref=f418e30] [cursor=pointer]:
+            - link "Check Box" [ref=f418e31]:
+              - /url: /checkbox
+          - listitem [ref=f418e34] [cursor=pointer]:
+            - link "Radio Button" [ref=f418e35]:
+              - /url: /radio-button
+          - listitem [ref=f418e38] [cursor=pointer]:
+            - link "Web Tables" [ref=f418e39]:
+              - /url: /webtables
+          - listitem [ref=f418e42] [cursor=pointer]:
+            - link "Buttons" [ref=f418e43]:
+              - /url: /buttons
+          - listitem [ref=f418e46] [cursor=pointer]:
+            - link "Links" [ref=f418e47]:
+              - /url: /links
+          - listitem [ref=f418e50] [cursor=pointer]:
+            - link "Broken Links - Images" [ref=f418e51]:
+              - /url: /broken
+          - listitem [ref=f418e54] [cursor=pointer]:
+            - link "Upload and Download" [ref=f418e55]:
+              - /url: /upload-download
+          - listitem [ref=f418e58] [cursor=pointer]:
+            - link "Dynamic Properties" [ref=f418e59]:
+              - /url: /dynamic-properties
+      - generic [ref=f418e62]: Forms
+      - generic [ref=f418e75]: Alerts, Frame & Windows
+      - generic [ref=f418e87]: Widgets
+      - generic [ref=f418e100]: Interactions
+      - generic [ref=f418e112]: Book Store Application
+    - generic [ref=f418e125]:
+      - heading "Buttons" [level=1] [ref=f418e126]
+      - button "Double Click Me" [ref=f418e128] [cursor=pointer]
+      - button "Right Click Me" [ref=f418e130] [cursor=pointer]
+      - button "Click Me" [ref=f418e132] [cursor=pointer]
+  - contentinfo [ref=f418e139]:
+    - generic [ref=f418e140]: © 2013-2026 TOOLSQA.COM | ALL RIGHTS RESERVED.

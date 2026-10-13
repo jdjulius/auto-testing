@@ -1,2 +1,6 @@
-# Los Page Objects de DemoQA se agregan aquí a medida que se automatizan pantallas
-# (ver skill escenario-ui), y se exportan en __all__ como en toolshop-ui/pages/__init__.py.
+from pages.alerts import AlertsPage
+from pages.buttons import ButtonsPage
+from pages.text_box import TextBoxPage
+from pages.webtables import Registro, WebTablesPage
+
+__all__ = ["AlertsPage", "ButtonsPage", "Registro", "TextBoxPage", "WebTablesPage"]

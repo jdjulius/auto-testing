@@ -1,0 +1,136 @@
+- generic [ref=f442e1]:
+  - generic [ref=f442e2]:
+    - banner [ref=f442e3]:
+      - link [ref=f442e4] [cursor=pointer]:
+        - /url: https://demoqa.com
+    - generic [ref=f442e8]:
+      - generic [ref=f442e11]:
+        - generic [ref=f442e12]:
+          - generic [ref=f442e13] [cursor=pointer]: Elements
+          - list [ref=f442e25]:
+            - listitem [ref=f442e26] [cursor=pointer]:
+              - link "Text Box" [ref=f442e27]:
+                - /url: /text-box
+            - listitem [ref=f442e30] [cursor=pointer]:
+              - link "Check Box" [ref=f442e31]:
+                - /url: /checkbox
+            - listitem [ref=f442e34] [cursor=pointer]:
+              - link "Radio Button" [ref=f442e35]:
+                - /url: /radio-button
+            - listitem [ref=f442e38] [cursor=pointer]:
+              - link "Web Tables" [ref=f442e39]:
+                - /url: /webtables
+            - listitem [ref=f442e42] [cursor=pointer]:
+              - link "Buttons" [ref=f442e43]:
+                - /url: /buttons
+            - listitem [ref=f442e46] [cursor=pointer]:
+              - link "Links" [ref=f442e47]:
+                - /url: /links
+            - listitem [ref=f442e50] [cursor=pointer]:
+              - link "Broken Links - Images" [ref=f442e51]:
+                - /url: /broken
+            - listitem [ref=f442e54] [cursor=pointer]:
+              - link "Upload and Download" [ref=f442e55]:
+                - /url: /upload-download
+            - listitem [ref=f442e58] [cursor=pointer]:
+              - link "Dynamic Properties" [ref=f442e59]:
+                - /url: /dynamic-properties
+        - generic [ref=f442e62]: Forms
+        - generic [ref=f442e75]: Alerts, Frame & Windows
+        - generic [ref=f442e87]: Widgets
+        - generic [ref=f442e100]: Interactions
+        - generic [ref=f442e112]: Book Store Application
+      - generic [ref=f442e125]:
+        - heading "Web Tables" [level=1] [ref=f442e128]
+        - generic [ref=f442e129]:
+          - generic [ref=f442e130]:
+            - button "Add" [ref=f442e132] [cursor=pointer]
+            - generic [ref=f442e134]:
+              - textbox "Type to search" [ref=f442e135]
+              - button [ref=f442e136] [cursor=pointer]
+          - table [ref=f442e139]:
+            - rowgroup [ref=f442e140]:
+              - row [ref=f442e141]:
+                - columnheader "First Name" [ref=f442e142]
+                - columnheader "Last Name" [ref=f442e143]
+                - columnheader "Age" [ref=f442e144]
+                - columnheader "Email" [ref=f442e145]
+                - columnheader "Salary" [ref=f442e146]
+                - columnheader "Department" [ref=f442e147]
+                - columnheader "Action" [ref=f442e148]
+            - rowgroup [ref=f442e149]:
+              - row [ref=f442e150]:
+                - cell "Cierra" [ref=f442e151]
+                - cell "Vega" [ref=f442e152]
+                - cell "39" [ref=f442e153]
+                - cell "cierra@example.com" [ref=f442e154]
+                - cell "10000" [ref=f442e155]
+                - cell "Insurance" [ref=f442e156]
+                - cell [ref=f442e157]:
+                  - generic [ref=f442e158]:
+                    - generic "Edit" [ref=f442e159] [cursor=pointer]
+                    - generic "Delete" [ref=f442e162] [cursor=pointer]
+              - row [ref=f442e165]:
+                - cell "Alden" [ref=f442e166]
+                - cell "Cantrell" [ref=f442e167]
+                - cell "45" [ref=f442e168]
+                - cell "alden@example.com" [ref=f442e169]
+                - cell "12000" [ref=f442e170]
+                - cell "Compliance" [ref=f442e171]
+                - cell [ref=f442e172]:
+                  - generic [ref=f442e173]:
+                    - generic "Edit" [ref=f442e174] [cursor=pointer]
+                    - generic "Delete" [ref=f442e177] [cursor=pointer]
+              - row [ref=f442e180]:
+                - cell "Kierra" [ref=f442e181]
+                - cell "Gentry" [ref=f442e182]
+                - cell "29" [ref=f442e183]
+                - cell "kierra@example.com" [ref=f442e184]
+                - cell "2000" [ref=f442e185]
+                - cell "Legal" [ref=f442e186]
+                - cell [ref=f442e187]:
+                  - generic [ref=f442e188]:
+                    - generic "Edit" [ref=f442e189] [cursor=pointer]
+                    - generic "Delete" [ref=f442e192] [cursor=pointer]
+          - generic [ref=f442e196]:
+            - group [ref=f442e198]:
+              - button "First" [disabled]
+              - button "Previous" [disabled]
+              - button "Next" [disabled]
+              - button "Last" [disabled]
+            - generic [ref=f442e199]:
+              - text: Page
+              - strong [ref=f442e200]: 1 of 1
+            - combobox [ref=f442e202]:
+              - option "Show 10" [selected]
+              - option "Show 20"
+              - option "Show 30"
+              - option "Show 40"
+              - option "Show 50"
+    - contentinfo [ref=f442e209]:
+      - generic [ref=f442e210]: © 2013-2026 TOOLSQA.COM | ALL RIGHTS RESERVED.
+  - dialog [ref=f442e212]:
+    - generic [ref=f442e213]:
+      - generic [ref=f442e214]:
+        - generic [ref=f442e215]: Registration Form
+        - button "Close" [ref=f442e216] [cursor=pointer]
+      - generic [ref=f442e218]:
+        - generic [ref=f442e219]:
+          - generic [ref=f442e220]: First Name
+          - textbox "First Name" [ref=f442e223]
+        - generic [ref=f442e224]:
+          - generic [ref=f442e225]: Last Name
+          - textbox "Last Name" [ref=f442e228]
+        - generic [ref=f442e229]:
+          - generic [ref=f442e230]: Email
+          - textbox "name@example.com" [ref=f442e233]: no-es-un-correo
+        - generic [ref=f442e234]:
+          - generic [ref=f442e235]: Age
+          - textbox "Age" [ref=f442e238]
+        - generic [ref=f442e239]:
+          - generic [ref=f442e240]: Salary
+          - textbox "Salary" [ref=f442e243]
+        - generic [ref=f442e244]:
+          - generic [ref=f442e245]: Department
+          - textbox "Department" [ref=f442e248]
+        - button "Submit" [active] [ref=f442e251] [cursor=pointer]

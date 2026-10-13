@@ -1,0 +1,45 @@
+- generic [ref=f424e2]:
+  - banner [ref=f424e3]:
+    - link [ref=f424e4] [cursor=pointer]:
+      - /url: https://demoqa.com
+  - generic [ref=f424e8]:
+    - generic [ref=f424e11]:
+      - generic [ref=f424e12]: Elements
+      - generic [ref=f424e24]: Forms
+      - generic [ref=f424e37]:
+        - generic [ref=f424e38] [cursor=pointer]: Alerts, Frame & Windows
+        - list [ref=f424e50]:
+          - listitem [ref=f424e51] [cursor=pointer]:
+            - link "Browser Windows" [ref=f424e52]:
+              - /url: /browser-windows
+          - listitem [ref=f424e55] [cursor=pointer]:
+            - link "Alerts" [ref=f424e56]:
+              - /url: /alerts
+          - listitem [ref=f424e59] [cursor=pointer]:
+            - link "Frames" [ref=f424e60]:
+              - /url: /frames
+          - listitem [ref=f424e63] [cursor=pointer]:
+            - link "Nested Frames" [ref=f424e64]:
+              - /url: /nestedframes
+          - listitem [ref=f424e67] [cursor=pointer]:
+            - link "Modal Dialogs" [ref=f424e68]:
+              - /url: /modal-dialogs
+      - generic [ref=f424e71]: Widgets
+      - generic [ref=f424e84]: Interactions
+      - generic [ref=f424e96]: Book Store Application
+    - generic [ref=f424e109]:
+      - heading "Alerts" [level=1] [ref=f424e110]
+      - generic [ref=f424e111]:
+        - generic [ref=f424e112]: Click Button to see alert
+        - button "Click me" [ref=f424e114] [cursor=pointer]
+      - generic [ref=f424e115]:
+        - generic [ref=f424e116]: On button click, alert will appear after 5 seconds
+        - button "Click me" [ref=f424e118] [cursor=pointer]
+      - generic [ref=f424e119]:
+        - generic [ref=f424e120]: On button click, confirm box will appear
+        - button "Click me" [ref=f424e122] [cursor=pointer]
+      - generic [ref=f424e123]:
+        - generic [ref=f424e124]: On button click, prompt box will appear
+        - button "Click me" [ref=f424e126] [cursor=pointer]
+  - contentinfo [ref=f424e133]:
+    - generic [ref=f424e134]: © 2013-2026 TOOLSQA.COM | ALL RIGHTS RESERVED.

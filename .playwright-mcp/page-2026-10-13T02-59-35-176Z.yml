@@ -1,0 +1,110 @@
+- generic [ref=f436e2]:
+  - banner [ref=f436e3]:
+    - link [ref=f436e4] [cursor=pointer]:
+      - /url: https://demoqa.com
+  - generic [ref=f436e8]:
+    - generic [ref=f436e11]:
+      - generic [ref=f436e12]:
+        - generic [ref=f436e13] [cursor=pointer]: Elements
+        - list [ref=f436e25]:
+          - listitem [ref=f436e26] [cursor=pointer]:
+            - link "Text Box" [ref=f436e27]:
+              - /url: /text-box
+          - listitem [ref=f436e30] [cursor=pointer]:
+            - link "Check Box" [ref=f436e31]:
+              - /url: /checkbox
+          - listitem [ref=f436e34] [cursor=pointer]:
+            - link "Radio Button" [ref=f436e35]:
+              - /url: /radio-button
+          - listitem [ref=f436e38] [cursor=pointer]:
+            - link "Web Tables" [ref=f436e39]:
+              - /url: /webtables
+          - listitem [ref=f436e42] [cursor=pointer]:
+            - link "Buttons" [ref=f436e43]:
+              - /url: /buttons
+          - listitem [ref=f436e46] [cursor=pointer]:
+            - link "Links" [ref=f436e47]:
+              - /url: /links
+          - listitem [ref=f436e50] [cursor=pointer]:
+            - link "Broken Links - Images" [ref=f436e51]:
+              - /url: /broken
+          - listitem [ref=f436e54] [cursor=pointer]:
+            - link "Upload and Download" [ref=f436e55]:
+              - /url: /upload-download
+          - listitem [ref=f436e58] [cursor=pointer]:
+            - link "Dynamic Properties" [ref=f436e59]:
+              - /url: /dynamic-properties
+      - generic [ref=f436e62]: Forms
+      - generic [ref=f436e75]: Alerts, Frame & Windows
+      - generic [ref=f436e87]: Widgets
+      - generic [ref=f436e100]: Interactions
+      - generic [ref=f436e112]: Book Store Application
+    - generic [ref=f436e125]:
+      - heading "Web Tables" [level=1] [ref=f436e128]
+      - generic [ref=f436e129]:
+        - generic [ref=f436e130]:
+          - button "Add" [ref=f436e132] [cursor=pointer]
+          - generic [ref=f436e134]:
+            - textbox "Type to search" [ref=f436e135]
+            - button [ref=f436e136] [cursor=pointer]
+        - table [ref=f436e139]:
+          - rowgroup [ref=f436e140]:
+            - row [ref=f436e141]:
+              - columnheader "First Name" [ref=f436e142]
+              - columnheader "Last Name" [ref=f436e143]
+              - columnheader "Age" [ref=f436e144]
+              - columnheader "Email" [ref=f436e145]
+              - columnheader "Salary" [ref=f436e146]
+              - columnheader "Department" [ref=f436e147]
+              - columnheader "Action" [ref=f436e148]
+          - rowgroup [ref=f436e149]:
+            - row [ref=f436e150]:
+              - cell "Cierra" [ref=f436e151]
+              - cell "Vega" [ref=f436e152]
+              - cell "39" [ref=f436e153]
+              - cell "cierra@example.com" [ref=f436e154]
+              - cell "10000" [ref=f436e155]
+              - cell "Insurance" [ref=f436e156]
+              - cell [ref=f436e157]:
+                - generic [ref=f436e158]:
+                  - generic "Edit" [ref=f436e159] [cursor=pointer]
+                  - generic "Delete" [ref=f436e162] [cursor=pointer]
+            - row [ref=f436e165]:
+              - cell "Alden" [ref=f436e166]
+              - cell "Cantrell" [ref=f436e167]
+              - cell "45" [ref=f436e168]
+              - cell "alden@example.com" [ref=f436e169]
+              - cell "12000" [ref=f436e170]
+              - cell "Compliance" [ref=f436e171]
+              - cell [ref=f436e172]:
+                - generic [ref=f436e173]:
+                  - generic "Edit" [ref=f436e174] [cursor=pointer]
+                  - generic "Delete" [ref=f436e177] [cursor=pointer]
+            - row [ref=f436e180]:
+              - cell "Kierra" [ref=f436e181]
+              - cell "Gentry" [ref=f436e182]
+              - cell "29" [ref=f436e183]
+              - cell "kierra@example.com" [ref=f436e184]
+              - cell "2000" [ref=f436e185]
+              - cell "Legal" [ref=f436e186]
+              - cell [ref=f436e187]:
+                - generic [ref=f436e188]:
+                  - generic "Edit" [ref=f436e189] [cursor=pointer]
+                  - generic "Delete" [ref=f436e192] [cursor=pointer]
+        - generic [ref=f436e196]:
+          - group [ref=f436e198]:
+            - button "First" [disabled]
+            - button "Previous" [disabled]
+            - button "Next" [disabled]
+            - button "Last" [disabled]
+          - generic [ref=f436e199]:
+            - text: Page
+            - strong [ref=f436e200]: 1 of 1
+          - combobox [ref=f436e202]:
+            - option "Show 10" [selected]
+            - option "Show 20"
+            - option "Show 30"
+            - option "Show 40"
+            - option "Show 50"
+  - contentinfo [ref=f436e209]:
+    - generic [ref=f436e210]: © 2013-2026 TOOLSQA.COM | ALL RIGHTS RESERVED.
