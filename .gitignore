@@ -2,8 +2,10 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
+.venv*/
 node_modules/
 test-results/
+.playwright-mcp/
 # Resultados locales de cada sitio (el catálogo de escenarios y de APIs sí se versiona)
 **/reportes/.escenarios*.tmp
 **/reportes/.escenarios*.xlsx
