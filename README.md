@@ -110,6 +110,23 @@ Saucedemo tiene 21 (usuarios especiales, una cookie forjada que da acceso, compr
 con el carrito vacío, entre otros); la lista está en
 `proyectos/saucedemo-ui/reportes/escenarios.xlsx` filtrando el estado `XFAIL`.
 
+## Skills de Claude Code
+
+En `.claude/skills/` hay skills del proyecto: Claude Code las usa solas cuando la
+tarea coincide (o se llaman con `/<nombre>`), y las comparte todo el que clone el repo.
+
+| Skill | Para qué |
+|---|---|
+| `levantar-escenarios` | Registrar, documentar, renombrar o revisar escenarios; defectos conocidos con `xfail` |
+| `escenario-ui` | Escribir o corregir pruebas de UI con Playwright (Page Objects, selectores, esperas) |
+| `escenario-api` | Escribir pruebas de API con el cliente, los esquemas y los fixtures de token |
+| `relevar-pantallas` | Explorar una app en vivo y armar el mapa de pantallas (incluye `scripts/explorar.py`) |
+| `nuevo-proyecto` | Agregar un proyecto UI o API al monorepo (requirements, pytest.ini, CI, Allure) |
+| `ejecutar-pruebas` | Correr pruebas, revisar reportes y resolver problemas de navegador, red o cuelgues |
+
+Para agregar otra: crea `.claude/skills/<nombre>/SKILL.md` con `name` y `description`
+(cuándo usarla) en el encabezado y las instrucciones abajo.
+
 ## Captura de APIs consumidas por la UI (experimental)
 
 `auto_testing.apis` registra, durante las pruebas de UI, cada endpoint que llama
